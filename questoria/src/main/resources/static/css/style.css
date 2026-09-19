@@ -68,12 +68,6 @@ input,
 select,
 textarea {
     font-family: var(--font-main);
-}
-
-button,
-input,
-select,
-textarea {
     font-size: inherit;
 }
 
@@ -921,6 +915,24 @@ img {
     border-radius: inherit;
 }
 
+.library-review-rating {
+    color: var(--green-dark);
+
+    font-size: 14px;
+
+    letter-spacing: 1px;
+
+    white-space: nowrap;
+}
+
+.library-review-unrated {
+    color: var(--text-muted);
+
+    font-size: 13px;
+
+    white-space: nowrap;
+}
+
 /* =========================
    BACKLOG
 ========================= */
@@ -1234,6 +1246,43 @@ img {
     font-weight: 600;
 }
 
+.backlog-review {
+    margin-top: 15px;
+}
+
+.backlog-review-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 35px;
+
+    padding: 0 13px;
+
+    background: #ffffff;
+
+    border: 1px solid #dfe3e7;
+
+    border-radius: 7px;
+
+    color: var(--green-dark);
+
+    font-size: 13px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition:
+            background 0.15s ease,
+            border-color 0.15s ease;
+}
+
+.backlog-review-link:hover {
+    background: var(--green-light);
+
+    border-color: #cbd8ce;
+}
+
 .status-badge {
     display: inline-flex;
     align-items: center;
@@ -1370,7 +1419,8 @@ img {
 }
 
 .quests-list,
-.quest-grid {
+.quest-grid,
+.quests-grid {
     display: grid;
 
     grid-template-columns:
@@ -1403,7 +1453,8 @@ img {
 }
 
 .quest-top,
-.admin-quest-top {
+.admin-quest-top,
+.quest-card-header {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
@@ -1411,7 +1462,8 @@ img {
     gap: 15px;
 }
 
-.quest-tag {
+.quest-tag,
+.quest-status {
     display: inline-flex;
     align-items: center;
 
@@ -1431,6 +1483,12 @@ img {
     letter-spacing: 0.05em;
 }
 
+.quest-status-completed {
+    background: var(--green-light);
+    color: var(--green-dark);
+}
+
+.quest-card h2,
 .quest-card h3,
 .admin-quest-card h3 {
     margin: 8px 0 0;
@@ -1443,6 +1501,7 @@ img {
     line-height: 1.35;
 }
 
+.quest-description,
 .quest-card > p,
 .admin-quest-card > p {
     margin: 10px 0 17px;
@@ -1480,7 +1539,9 @@ img {
 
 .quest-target,
 .admin-quest-target {
-    color: #6e757d;
+    margin-top: 14px;
+
+    color: var(--text-secondary);
 
     font-size: 13px;
 }
@@ -1488,6 +1549,8 @@ img {
 .quest-target strong,
 .admin-quest-target strong {
     color: var(--text);
+
+    font-weight: 700;
 }
 
 .quest-progress {
@@ -1525,15 +1588,29 @@ img {
     border-radius: inherit;
 }
 
+.quest-progress-section {
+    margin-top: 15px;
+}
+
 .quest-progress-header {
     display: flex;
+    align-items: center;
     justify-content: space-between;
+
+    gap: 12px;
 
     margin-bottom: 7px;
 
-    color: var(--text-muted);
+    color: var(--text-secondary);
 
     font-size: 12px;
+}
+
+.quest-progress-header strong {
+    color: var(--green-dark);
+
+    font-size: 13px;
+    font-weight: 700;
 }
 
 .quest-progress-bar {
@@ -1542,17 +1619,19 @@ img {
 
     overflow: hidden;
 
-    background: #edf0f2;
-
     border-radius: 999px;
+
+    background: var(--border-light);
 }
 
 .quest-progress-fill {
     height: 100%;
 
+    border-radius: inherit;
+
     background: var(--green);
 
-    border-radius: inherit;
+    transition: width 0.25s ease;
 }
 
 .quest-form {
@@ -1593,6 +1672,100 @@ img {
     font-size: 14px;
 
     line-height: 1.55;
+}
+
+/* =========================
+   QUEST ACHIEVEMENT
+========================= */
+
+.quest-achievement {
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+
+    margin-top: 18px;
+    padding: 14px;
+
+    background: var(--surface-soft);
+
+    border: 1px solid var(--border-light);
+
+    border-radius: 11px;
+}
+
+.quest-achievement-icon {
+    width: 42px;
+    height: 42px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: var(--green-light);
+
+    font-size: 20px;
+}
+
+.quest-achievement-info {
+    min-width: 0;
+}
+
+.quest-achievement-label {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: var(--green-dark);
+
+    font-size: 10px;
+    font-weight: 700;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+}
+
+.quest-achievement-info strong {
+    display: block;
+
+    color: var(--text);
+
+    font-size: 15px;
+    font-weight: 700;
+
+    line-height: 1.35;
+}
+
+.quest-achievement-info p {
+    margin: 3px 0 0;
+
+    color: var(--text-secondary);
+
+    font-size: 12px;
+
+    line-height: 1.4;
+}
+
+.quest-completed-message {
+    margin-top: 12px;
+
+    padding: 10px 12px;
+
+    border-radius: 9px;
+
+    background: var(--green-light);
+
+    color: var(--green-dark);
+
+    font-size: 13px;
+    font-weight: 600;
+
+    text-align: center;
 }
 
 /* =========================
@@ -2527,7 +2700,6 @@ img {
     .review-game-cover {
         width: 240px;
     }
-
 }
 
 @media (max-width: 1100px) {
@@ -2562,7 +2734,6 @@ img {
         grid-template-columns:
                 repeat(3, minmax(0, 1fr));
     }
-
 }
 
 @media (max-width: 1050px) {
@@ -2583,7 +2754,6 @@ img {
     .backlog-main {
         padding: 20px;
     }
-
 }
 
 @media (max-width: 900px) {
@@ -2594,6 +2764,7 @@ img {
 
     .quests-list,
     .quest-grid,
+    .quests-grid,
     .admin-quest-grid {
         grid-template-columns: 1fr;
     }
@@ -2601,7 +2772,6 @@ img {
     .profile-card {
         display: block;
     }
-
 }
 
 @media (max-width: 850px) {
@@ -2655,7 +2825,6 @@ img {
     .review-content {
         padding: 18px;
     }
-
 }
 
 @media (max-width: 720px) {
@@ -2820,7 +2989,6 @@ img {
     .review-form-card {
         padding: 20px;
     }
-
 }
 
 @media (max-width: 480px) {
@@ -2899,110 +3067,12 @@ img {
 
         font-size: 14px;
     }
-    .quest-target {
-        margin-top: 14px;
-        font-size: 13px;
-        color: var(--text-secondary);
-    }
-
-    .quest-target strong {
-        color: var(--text);
-        font-weight: 700;
-    }
-
-    .quest-progress-section {
-        margin-top: 15px;
-    }
-
-    .quest-progress-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        margin-bottom: 7px;
-        font-size: 12px;
-        color: var(--text-secondary);
-    }
-
-    .quest-progress-header strong {
-        color: var(--green-dark);
-        font-size: 13px;
-        font-weight: 700;
-    }
-
-    .quest-progress-bar {
-        width: 100%;
-        height: 7px;
-        overflow: hidden;
-        border-radius: 999px;
-        background: var(--border-light);
-    }
-
-    .quest-progress-fill {
-        height: 100%;
-        border-radius: inherit;
-        background: var(--green);
-        transition: width 0.25s ease;
-    }
 
     .quest-achievement {
-        display: flex;
-        align-items: center;
-        gap: 13px;
-        margin-top: 18px;
-        padding: 14px;
-        background: var(--surface-soft);
-        border: 1px solid var(--border-light);
-        border-radius: 11px;
-    }
-
-    .quest-achievement-icon {
-        width: 42px;
-        height: 42px;
-        flex-shrink: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 10px;
-        background: var(--green-light);
-        font-size: 20px;
-    }
-
-    .quest-achievement-info {
-        min-width: 0;
-    }
-
-    .quest-achievement-label {
-        display: block;
-        margin-bottom: 3px;
-        font-size: 10px;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        color: var(--green-dark);
+        align-items: flex-start;
     }
 
     .quest-achievement-info strong {
-        display: block;
-        font-size: 15px;
-        font-weight: 700;
-        color: var(--text);
-    }
-
-    .quest-achievement-info p {
-        margin: 3px 0 0;
-        font-size: 12px;
-        line-height: 1.4;
-        color: var(--text-secondary);
-    }
-
-    .quest-completed-message {
-        margin-top: 12px;
-        padding: 10px 12px;
-        border-radius: 9px;
-        background: var(--green-light);
-        color: var(--green-dark);
-        font-size: 13px;
-        font-weight: 600;
-        text-align: center;
+        font-size: 14px;
     }
 }

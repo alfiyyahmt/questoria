@@ -3,329 +3,597 @@
       xmlns:th="http://www.thymeleaf.org">
 
 <head>
+
     <meta charset="UTF-8">
-    <title>Friends - Questoria</title>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Friends - Questoria
+    </title>
 
     <link rel="stylesheet"
           th:href="@{/css/style.css}">
+
 </head>
 
 <body>
 
-<aside class="sidebar">
-
-    <div class="sidebar-brand">
-
-        <a href="/"
-           class="sidebar-logo">
-            QUESTORIA
-        </a>
-
-        <span class="sidebar-subtitle">
-            GAME TRACKER
-        </span>
-
-    </div>
-
-    <nav class="sidebar-menu">
-
-        <a href="/"
-           class="sidebar-link">
-            <span class="sidebar-icon">⌂</span>
-            <span>Home</span>
-        </a>
-
-        <a href="/library"
-           class="sidebar-link">
-            <span class="sidebar-icon">▣</span>
-            <span>Library</span>
-        </a>
-
-        <a href="/backlog"
-           class="sidebar-link">
-            <span class="sidebar-icon">☰</span>
-            <span>Backlog</span>
-        </a>
-
-        <a href="/quests"
-           class="sidebar-link">
-            <span class="sidebar-icon">◇</span>
-            <span>Quests</span>
-        </a>
-
-        <a href="/friends"
-           class="sidebar-link active">
-            <span class="sidebar-icon">♧</span>
-            <span>Friends</span>
-        </a>
-
-        <a href="/reviews"
-           class="sidebar-link">
-            <span class="sidebar-icon">☆</span>
-            <span>Reviews</span>
-        </a>
-
-        <a href="/profile"
-           class="sidebar-link">
-            <span class="sidebar-icon">○</span>
-            <span>Profile</span>
-        </a>
-
-    </nav>
-
-    <div class="sidebar-bottom">
-
-        <a th:if="${isLoggedIn}"
-           href="/logout"
-           class="sidebar-link logout-link">
-
-            <span class="sidebar-icon">↪</span>
-            <span>Logout</span>
-
-        </a>
-
-        <a th:unless="${isLoggedIn}"
-           href="/auth/steam"
-           class="sidebar-steam-login">
-
-            Login with Steam
-
-        </a>
-
-    </div>
-
-</aside>
+<div class="app-layout">
 
 
-<main class="main-content">
-
-    <div class="dashboard-page">
-
-        <div class="dashboard-container">
-
-            <div class="friends-page-header">
-
-                <div>
-                    <span class="page-kicker">
-                        SOCIAL
-                    </span>
-
-                    <h1>
-                        Friends
-                    </h1>
-
-                    <p>
-                        Your Steam friends on Questoria.
-                    </p>
-                </div>
-
-            </div>
+    <aside class="sidebar">
 
 
-            <div th:if="${friends != null && !friends.isEmpty()}"
-                 class="friends-grid">
+        <div class="sidebar-brand">
 
-                <div class="friend-card"
-                     th:each="friend : ${friends}">
+            <a href="/"
+               class="brand">
 
-                    <img class="friend-avatar"
-                         th:src="${friend.avatarFull}"
-                         th:alt="${friend.personaName}">
-
-                    <div class="friend-info">
-
-                        <h2 th:text="${friend.personaName}">
-                            Friend Name
-                        </h2>
-
-                        <a th:href="${friend.profileUrl}"
-                           target="_blank"
-                           rel="noopener noreferrer"
-                           class="friend-profile-link">
-
-                            View Steam Profile
-
-                        </a>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div th:if="${friends == null || friends.isEmpty()}"
-                 class="friends-empty">
-
-                <div class="friends-empty-icon">
-                    ♧
-                </div>
-
-                <h2>
-                    No Steam friends found
-                </h2>
-
-                <p>
-                    Your Steam friend list may be private
-                    or you currently have no Steam friends.
-                </p>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <footer class="footer">
-
-        <div class="footer-container">
-
-            <strong>
                 QUESTORIA
-            </strong>
 
-            <span>
-                Personal Steam Game Backlog & Quest Management System
+            </a>
+
+            <span class="sidebar-tagline">
+
+                GAME TRACKER
+
             </span>
 
         </div>
 
-    </footer>
 
-</main>
+        <nav class="sidebar-menu">
+
+
+            <a href="/"
+               class="sidebar-link">
+
+                <span class="sidebar-icon">
+
+                    ⌂
+
+                </span>
+
+                <span>
+
+                    Home
+
+                </span>
+
+            </a>
+
+
+            <a href="/library"
+               class="sidebar-link">
+
+                <span class="sidebar-icon">
+
+                    ▣
+
+                </span>
+
+                <span>
+
+                    Library
+
+                </span>
+
+            </a>
+
+
+            <a href="/backlog"
+               class="sidebar-link">
+
+                <span class="sidebar-icon">
+
+                    ☰
+
+                </span>
+
+                <span>
+
+                    Backlog
+
+                </span>
+
+            </a>
+
+
+            <a href="/quests"
+               class="sidebar-link">
+
+                <span class="sidebar-icon">
+
+                    ◇
+
+                </span>
+
+                <span>
+
+                    Quests
+
+                </span>
+
+            </a>
+
+
+            <a href="/friends"
+               class="sidebar-link active">
+
+                <span class="sidebar-icon">
+
+                    ♧
+
+                </span>
+
+                <span>
+
+                    Friends
+
+                </span>
+
+            </a>
+
+
+            <a href="/reviews"
+               class="sidebar-link">
+
+                <span class="sidebar-icon">
+
+                    ☆
+
+                </span>
+
+                <span>
+
+                    Reviews
+
+                </span>
+
+            </a>
+
+
+            <a href="/profile"
+               class="sidebar-link">
+
+                <span class="sidebar-icon">
+
+                    ○
+
+                </span>
+
+                <span>
+
+                    Profile
+
+                </span>
+
+            </a>
+
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+
+            <a href="/logout"
+               class="sidebar-logout">
+
+                <span class="sidebar-icon">
+
+                    ↪
+
+                </span>
+
+                <span>
+
+                    Logout
+
+                </span>
+
+            </a>
+
+
+        </div>
+
+
+    </aside>
+
+
+    <main class="main-content">
+
+
+        <section class="dashboard-page">
+
+            <div class="dashboard-container">
+
+
+                <section class="friends-page-header">
+
+
+                    <div>
+
+
+                        <span class="section-kicker">
+
+                            SOCIAL
+
+                        </span>
+
+
+                        <h1>
+
+                            Friends
+
+                        </h1>
+
+
+                        <p>
+
+                            Your Steam friends on Questoria.
+
+                        </p>
+
+
+                    </div>
+
+
+                </section>
+
+
+                <div
+                        th:if="${friends != null && !friends.isEmpty()}"
+                        class="friends-grid">
+
+
+                    <div class="friend-card"
+                         th:each="friend : ${friends}">
+
+
+                        <img
+                                class="friend-avatar"
+                                th:src="${friend.avatarFull}"
+                                th:alt="${friend.personaName}">
+
+
+                        <div class="friend-info">
+
+
+                            <h2
+                                    th:text="${friend.personaName}">
+
+                                Friend Name
+
+                            </h2>
+
+
+                            <a
+                                    th:href="${friend.profileUrl}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="friend-profile-link">
+
+                                View Steam Profile
+
+                            </a>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+                <div
+                        th:if="${friends == null || friends.isEmpty()}"
+                        class="friends-empty">
+
+
+                    <div class="friends-empty-icon">
+
+                        ♧
+
+                    </div>
+
+
+                    <h2>
+
+                        No Steam friends found
+
+                    </h2>
+
+
+                    <p>
+
+                        Your Steam friend list may be private
+                        or you currently have no Steam friends.
+
+                    </p>
+
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+        <footer class="footer">
+
+
+            <div class="footer-container">
+
+
+                <strong>
+
+                    QUESTORIA
+
+                </strong>
+
+
+                <span>
+
+                    Personal Steam Game Backlog &amp; Quest Management System
+
+                </span>
+
+
+            </div>
+
+
+        </footer>
+
+
+    </main>
+
+
+</div>
 
 
 <style>
 
+
     .friends-page-header {
+
         display: flex;
+
         align-items: flex-start;
+
         justify-content: space-between;
+
         margin-bottom: 28px;
+
     }
+
 
     .friends-page-header h1 {
+
         margin: 5px 0 7px;
+
         font-size: 28px;
+
         font-weight: 700;
+
         color: var(--text);
+
     }
+
 
     .friends-page-header p {
+
         margin: 0;
+
         font-size: 14px;
+
         color: var(--text-secondary);
+
     }
+
 
     .friends-grid {
+
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+
         gap: 16px;
+
     }
+
 
     .friend-card {
+
         display: flex;
+
         align-items: center;
+
         gap: 14px;
+
         padding: 17px;
+
         background: #ffffff;
+
         border: 1px solid var(--border);
+
         border-radius: 13px;
-        transition: border-color 0.2s ease,
-        transform 0.2s ease;
+
+        transition:
+                border-color 0.2s ease,
+                transform 0.2s ease;
+
     }
+
 
     .friend-card:hover {
+
         border-color: #cdd9d0;
+
         transform: translateY(-2px);
+
     }
+
 
     .friend-avatar {
+
         width: 64px;
+
         height: 64px;
+
         flex-shrink: 0;
+
         border-radius: 10px;
+
         object-fit: cover;
+
         background: var(--surface-soft);
+
     }
+
 
     .friend-info {
+
         min-width: 0;
+
     }
+
 
     .friend-info h2 {
+
         margin: 0 0 7px;
+
         font-size: 17px;
+
         font-weight: 600;
+
         color: var(--text);
+
         white-space: nowrap;
+
         overflow: hidden;
+
         text-overflow: ellipsis;
+
     }
+
 
     .friend-profile-link {
+
         font-size: 13px;
+
         color: var(--green-dark);
+
         text-decoration: none;
+
     }
+
 
     .friend-profile-link:hover {
+
         text-decoration: underline;
+
     }
+
 
     .friends-empty {
+
         padding: 55px 25px;
+
         text-align: center;
+
         background: #ffffff;
+
         border: 1px solid var(--border);
+
         border-radius: 13px;
+
     }
+
 
     .friends-empty-icon {
+
         width: 54px;
+
         height: 54px;
+
         margin: 0 auto 15px;
+
         display: flex;
+
         align-items: center;
+
         justify-content: center;
+
         border-radius: 50%;
+
         background: var(--green-light);
+
         color: var(--green-dark);
+
         font-size: 24px;
+
     }
+
 
     .friends-empty h2 {
+
         margin: 0 0 8px;
+
         font-size: 18px;
+
         color: var(--text);
+
     }
 
+
     .friends-empty p {
+
         max-width: 430px;
+
         margin: 0 auto;
+
         font-size: 14px;
+
         line-height: 1.6;
+
         color: var(--text-secondary);
+
     }
+
 
     @media (max-width: 1000px) {
 
         .friends-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
         }
 
     }
+
 
     @media (max-width: 650px) {
 
         .friends-grid {
+
             grid-template-columns: 1fr;
+
         }
 
     }
 
+
 </style>
 
+
 </body>
+
 </html>

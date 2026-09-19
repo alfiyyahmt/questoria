@@ -9,10 +9,13 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Quests - Questoria</title>
+    <title>
+        Quests - Questoria
+    </title>
 
-    <link rel="stylesheet"
-          th:href="@{/css/style.css}">
+    <link
+            rel="stylesheet"
+            th:href="@{/css/style.css}">
 
 </head>
 
@@ -20,323 +23,525 @@
 
 <div class="app-layout">
 
+
     <aside class="sidebar">
 
-        <div class="sidebar-brand">
-            <div class="sidebar-logo">Q</div>
 
-            <div>
-                <strong>QUESTORIA</strong>
-                <span>Steam Game Tracker</span>
-            </div>
+        <div class="sidebar-brand">
+
+            <a href="/"
+               class="brand">
+
+                QUESTORIA
+
+            </a>
+
+            <span class="sidebar-tagline">
+
+                GAME TRACKER
+
+            </span>
+
         </div>
 
+
         <nav class="sidebar-menu">
+
 
             <a href="/"
                class="sidebar-link">
 
-                <span class="sidebar-icon">⌂</span>
-                <span>Home</span>
+                <span class="sidebar-icon">
+
+                    ⌂
+
+                </span>
+
+                <span>
+
+                    Home
+
+                </span>
 
             </a>
+
 
             <a href="/library"
                class="sidebar-link">
 
-                <span class="sidebar-icon">▣</span>
-                <span>Library</span>
+                <span class="sidebar-icon">
+
+                    ▣
+
+                </span>
+
+                <span>
+
+                    Library
+
+                </span>
 
             </a>
+
 
             <a href="/backlog"
                class="sidebar-link">
 
-                <span class="sidebar-icon">☰</span>
-                <span>Backlog</span>
+                <span class="sidebar-icon">
+
+                    ☰
+
+                </span>
+
+                <span>
+
+                    Backlog
+
+                </span>
 
             </a>
+
 
             <a href="/quests"
                class="sidebar-link active">
 
-                <span class="sidebar-icon">◇</span>
-                <span>Quests</span>
+                <span class="sidebar-icon">
+
+                    ◇
+
+                </span>
+
+                <span>
+
+                    Quests
+
+                </span>
 
             </a>
+
 
             <a href="/friends"
                class="sidebar-link">
 
-                <span class="sidebar-icon">♧</span>
-                <span>Friends</span>
+                <span class="sidebar-icon">
+
+                    ♧
+
+                </span>
+
+                <span>
+
+                    Friends
+
+                </span>
 
             </a>
+
 
             <a href="/reviews"
                class="sidebar-link">
 
-                <span class="sidebar-icon">☆</span>
-                <span>Reviews</span>
+                <span class="sidebar-icon">
+
+                    ☆
+
+                </span>
+
+                <span>
+
+                    Reviews
+
+                </span>
 
             </a>
+
 
             <a href="/profile"
                class="sidebar-link">
 
-                <span class="sidebar-icon">○</span>
-                <span>Profile</span>
+                <span class="sidebar-icon">
+
+                    ○
+
+                </span>
+
+                <span>
+
+                    Profile
+
+                </span>
 
             </a>
+
 
         </nav>
 
+
         <div class="sidebar-bottom">
 
-            <a th:if="${isLoggedIn}"
-               href="/logout"
-               class="sidebar-link logout-link">
 
-                <span class="sidebar-icon">↪</span>
-                <span>Logout</span>
+            <a href="/logout"
+               class="sidebar-logout">
+
+                <span class="sidebar-icon">
+
+                    ↪
+
+                </span>
+
+                <span>
+
+                    Logout
+
+                </span>
 
             </a>
 
-            <a th:unless="${isLoggedIn}"
-               href="/auth/steam"
-               class="sidebar-steam-login">
-
-                Login with Steam
-
-            </a>
 
         </div>
+
 
     </aside>
 
 
     <main class="main-content">
 
-        <div class="quests-container">
 
-            <div class="page-header">
+        <section class="dashboard-page">
 
-                <div>
+            <div class="quests-container">
 
-                    <span class="page-kicker">
+
+                <section class="quests-page-header">
+
+
+                    <span class="section-kicker">
+
                         QUESTS
+
                     </span>
 
+
                     <h1>
+
                         Your Challenges &amp; Achievements
+
                     </h1>
 
+
                     <p>
+
                         Complete quests, track your progress, and unlock rewards.
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <div class="quests-grid"
-                 th:if="${quests != null and !quests.isEmpty()}">
-
-                <article class="quest-card"
-                         th:each="quest : ${quests}">
-
-                    <div class="quest-card-header">
-
-                        <div>
-
-                            <span class="quest-status"
-                                  th:classappend="${questPlayers[quest.id] != null and questPlayers[quest.id].completed
-                                      ? ' quest-status-completed'
-                                      : ''}"
-                                  th:text="${questPlayers[quest.id] != null and questPlayers[quest.id].completed
-                                      ? 'COMPLETED'
-                                      : 'ACTIVE'}">
-
-                                ACTIVE
-
-                            </span>
-
-                            <h2 th:text="${quest.title}">
-                                Complete Games
-                            </h2>
-
-                        </div>
-
-                    </div>
-
-
-                    <p class="quest-description"
-                       th:text="${quest.description}">
-
-                        Complete games from your backlog.
 
                     </p>
 
 
-                    <div class="quest-target">
-
-                        Target:
-
-                        <strong
-                                th:text="${quest.targetProgress}">
-                            3
-                        </strong>
-
-                        Games
-
-                    </div>
+                </section>
 
 
-                    <div class="quest-progress-section">
-
-                        <div class="quest-progress-header">
-
-                            <span>
-                                Progress
-                            </span>
-
-                            <strong
-                                    th:if="${questPlayers[quest.id] != null}"
-                                    th:text="${questPlayers[quest.id].progress + ' / ' + quest.targetProgress}">
-
-                                0 / 3
-
-                            </strong>
-
-                            <strong
-                                    th:if="${questPlayers[quest.id] == null}"
-                                    th:text="${'0 / ' + quest.targetProgress}">
-
-                                0 / 3
-
-                            </strong>
-
-                        </div>
+                <div class="quests-grid"
+                     th:if="${quests != null and !quests.isEmpty()}">
 
 
-                        <div class="quest-progress-bar">
+                    <article class="quest-card"
+                             th:each="quest : ${quests}">
 
-                            <div class="quest-progress-fill"
-                                 th:style="${questPlayers[quest.id] != null and quest.targetProgress > 0
-                                     ? 'width: ' + ((questPlayers[quest.id].progress * 100) / quest.targetProgress) + '%'
-                                     : 'width: 0%'}">
+
+                        <div class="quest-card-header">
+
+
+                            <div>
+
+
+                                <span class="quest-status"
+                                      th:classappend="${questPlayers[quest.id] != null and questPlayers[quest.id].completed
+                                          ? ' quest-status-completed'
+                                          : ''}"
+                                      th:text="${questPlayers[quest.id] != null and questPlayers[quest.id].completed
+                                          ? 'COMPLETED'
+                                          : 'ACTIVE'}">
+
+                                    ACTIVE
+
+                                </span>
+
+
+                                <h2
+                                        th:text="${quest.title}">
+
+                                    Complete Games
+
+                                </h2>
+
 
                             </div>
 
-                        </div>
-
-                    </div>
-
-
-                    <div class="quest-achievement">
-
-                        <div class="quest-achievement-icon"
-                             th:text="${questPlayers[quest.id] != null and questPlayers[quest.id].completed
-                                 ? '🏆'
-                                 : '🔒'}">
-
-                            🔒
 
                         </div>
 
 
-                        <div class="quest-achievement-info">
+                        <p class="quest-description"
+                           th:text="${quest.description}">
 
-                            <span class="quest-achievement-label"
-                                  th:text="${questPlayers[quest.id] != null and questPlayers[quest.id].completed
-                                      ? 'ACHIEVEMENT UNLOCKED'
-                                      : 'REWARD'}">
+                            Complete games from your backlog.
 
-                                REWARD
+                        </p>
 
-                            </span>
+
+                        <div class="quest-target">
+
+                            Target:
 
                             <strong
-                                    th:text="${quest.achievementName}">
+                                    th:text="${quest.targetProgress}">
 
-                                Achievement Name
+                                3
 
                             </strong>
 
-                            <p
-                                    th:text="${quest.achievementDescription}">
-
-                                Complete the quest to unlock this achievement.
-
-                            </p>
+                            Games
 
                         </div>
 
-                    </div>
+
+                        <div class="quest-progress-section">
 
 
-                    <div class="quest-actions">
-
-                        <form
-                                th:if="${questPlayers[quest.id] == null}"
-                                th:action="@{/quests/{id}/join(id=${quest.id})}"
-                                method="post">
-
-                            <button
-                                    type="submit"
-                                    class="primary-button">
-
-                                Join Quest
-
-                            </button>
-
-                        </form>
-
-                    </div>
-
-                </article>
-
-            </div>
+                            <div class="quest-progress-header">
 
 
-            <div class="empty-state"
-                 th:if="${quests == null or quests.isEmpty()}">
+                                <span>
 
-                <div class="empty-state-icon">
-                    ◇
+                                    Progress
+
+                                </span>
+
+
+                                <strong
+                                        th:if="${questPlayers[quest.id] != null}"
+                                        th:text="${questPlayers[quest.id].progress + ' / ' + quest.targetProgress}">
+
+                                    0 / 3
+
+                                </strong>
+
+
+                                <strong
+                                        th:if="${questPlayers[quest.id] == null}"
+                                        th:text="${'0 / ' + quest.targetProgress}">
+
+                                    0 / 3
+
+                                </strong>
+
+
+                            </div>
+
+
+                            <div class="quest-progress-bar">
+
+
+                                <div class="quest-progress-fill"
+                                     th:style="${questPlayers[quest.id] != null and quest.targetProgress > 0
+                                         ? 'width: ' + ((questPlayers[quest.id].progress * 100) / quest.targetProgress) + '%'
+                                         : 'width: 0%'}">
+
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="quest-achievement">
+
+
+                            <div class="quest-achievement-icon"
+                                 th:text="${questPlayers[quest.id] != null and questPlayers[quest.id].completed
+                                     ? '🏆'
+                                     : '🔒'}">
+
+                                🔒
+
+                            </div>
+
+
+                            <div class="quest-achievement-info">
+
+
+                                <span
+                                        class="quest-achievement-label"
+                                        th:text="${questPlayers[quest.id] != null and questPlayers[quest.id].completed
+                                            ? 'ACHIEVEMENT UNLOCKED'
+                                            : 'REWARD'}">
+
+                                    REWARD
+
+                                </span>
+
+
+                                <strong
+                                        th:text="${quest.achievementName != null and !#strings.isEmpty(quest.achievementName)
+                                            ? quest.achievementName
+                                            : 'Achievement Unlocked'}">
+
+                                    Achievement Unlocked
+
+                                </strong>
+
+
+                                <p
+                                        th:text="${quest.achievementDescription != null and !#strings.isEmpty(quest.achievementDescription)
+                                            ? quest.achievementDescription
+                                            : 'Complete this quest to unlock the achievement.'}">
+
+                                    Complete this quest to unlock the achievement.
+
+                                </p>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="quest-actions">
+
+
+                            <form
+                                    th:if="${questPlayers[quest.id] == null}"
+                                    th:action="@{/quests/{id}/join(id=${quest.id})}"
+                                    method="post">
+
+
+                                <button
+                                        type="submit"
+                                        class="primary-button">
+
+                                    Join Quest
+
+                                </button>
+
+
+                            </form>
+
+
+                        </div>
+
+
+                    </article>
+
+
                 </div>
 
-                <h2>
-                    No active quests
-                </h2>
 
-                <p>
-                    There are no active quests available right now.
-                </p>
+                <div class="empty-state"
+                     th:if="${quests == null or quests.isEmpty()}">
+
+
+                    <div class="empty-icon">
+
+                        ◇
+
+                    </div>
+
+
+                    <h2>
+
+                        No active quests
+
+                    </h2>
+
+
+                    <p>
+
+                        There are no active quests available right now.
+
+                    </p>
+
+
+                </div>
+
 
             </div>
 
-        </div>
+        </section>
 
 
         <footer class="footer">
 
+
             <div class="footer-container">
 
-                <strong>QUESTORIA</strong>
+
+                <strong>
+
+                    QUESTORIA
+
+                </strong>
+
 
                 <span>
+
                     Personal Steam Game Backlog &amp; Quest Management System
+
                 </span>
+
 
             </div>
 
+
         </footer>
+
 
     </main>
 
+
 </div>
+
+
+<style>
+
+    .quests-page-header {
+
+        margin-bottom: 28px;
+
+    }
+
+
+    .quests-page-header h1 {
+
+        margin: 5px 0 7px;
+
+        font-size: 28px;
+
+        font-weight: 700;
+
+        color: var(--text);
+
+        line-height: 1.2;
+
+    }
+
+
+    .quests-page-header p {
+
+        margin: 0;
+
+        font-size: 14px;
+
+        color: var(--text-secondary);
+
+        line-height: 1.55;
+
+    }
+
+
+</style>
+
 
 </body>
 
