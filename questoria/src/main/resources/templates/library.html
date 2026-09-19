@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Questoria - My Library</title>
+</head>
+<body>
+
+<h1>Questoria</h1>
+
+<nav>
+    <a href="/">Dashboard</a>
+    <a href="/library">My Library</a>
+    <a href="/backlog">Backlog</a>
+    <a href="/quests">Quests</a>
+    <a href="/profile">Profile</a>
+    <a href="/logout">Logout</a>
+</nav>
+
+<hr>
+
+<h2>My Library</h2>
+
+<div th:if="${#lists.isEmpty(backlogItems)}">
+    <p>No games found.</p>
+</div>
+
+<div th:each="item : ${backlogItems}">
+
+    <div>
+        <img
+                th:src="${item.game.cover}"
+                th:alt="${item.game.title}"
+                width="200"
+        >
+
+        <h3 th:text="${item.game.title}">Game Title</h3>
+
+        <p>
+            Developer:
+            <span th:text="${item.game.developer != null && !item.game.developer.isBlank() ? item.game.developer : 'Steam Game'}">
+                Steam Game
+            </span>
+        </p>
+
+        <p>
+            Status:
+            <span th:text="${item.status}">BACKLOG</span>
+        </p>
+
+        <p>
+            Progress:
+            <span th:text="${item.progress}">0</span>%
+        </p>
+
+    </div>
+
+    <hr>
+
+</div>
+
+</body>
+</html>

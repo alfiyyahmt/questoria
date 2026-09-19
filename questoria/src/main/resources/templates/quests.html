@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Questoria - Quests</title>
+</head>
+<body>
+
+<h1>Questoria</h1>
+
+<nav>
+    <a href="/">Dashboard</a>
+    <a href="/library">My Library</a>
+    <a href="/backlog">Backlog</a>
+    <a href="/quests">Quests</a>
+    <a href="/profile">Profile</a>
+    <a href="/logout">Logout</a>
+</nav>
+
+<hr>
+
+<h2>Quests</h2>
+
+<div th:if="${#lists.isEmpty(quests)}">
+    <p>No active quests available.</p>
+</div>
+
+<div th:each="quest : ${quests}">
+
+    <h3 th:text="${quest.title}">Quest Title</h3>
+
+    <p th:text="${quest.description}">
+        Quest description
+    </p>
+
+    <p>
+        Target:
+        <span th:text="${quest.targetProgress}">0</span>
+    </p>
+
+    <div th:if="${questPlayers.containsKey(quest.id)}">
+
+        <p>
+            Your Progress:
+            <span th:text="${questPlayers.get(quest.id).progress}">
+                0
+            </span>
+            /
+            <span th:text="${quest.targetProgress}">
+                0
+            </span>
+        </p>
+
+        <p th:if="${questPlayers.get(quest.id).completed}">
+            Completed
+        </p>
+
+        <form
+                th:action="@{/quests/{id}/progress(id=${quest.id})}"
+                method="post"
+        >
+            <input
+                    type="number"
+                    name="progress"
+                    min="0"
+                    th:max="${quest.targetProgress}"
+                    th:value="${questPlayers.get(quest.id).progress}"
+            >
+
+            <button type="submit">
+                Update Progress
+            </button>
+        </form>
+
+    </div>
+
+    <div th:unless="${questPlayers.containsKey(quest.id)}">
+
+        <form
+                th:action="@{/quests/{id}/join(id=${quest.id})}"
+                method="post"
+        >
+            <button type="submit">
+                Join Quest
+            </button>
+        </form>
+
+    </div>
+
+    <hr>
+
+</div>
+
+</body>
+</html>

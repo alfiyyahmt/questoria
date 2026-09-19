@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Questoria - Admin Quests</title>
+</head>
+<body>
+
+<h1>Questoria</h1>
+
+<nav>
+    <a href="/">Dashboard</a>
+    <a href="/library">My Library</a>
+    <a href="/backlog">Backlog</a>
+    <a href="/quests">Quests</a>
+    <a href="/profile">Profile</a>
+    <a href="/logout">Logout</a>
+</nav>
+
+<hr>
+
+<h2>Admin - Manage Quests</h2>
+
+<h3>Create Quest</h3>
+
+<form action="/admin/quests" method="post">
+
+    <div>
+        <label>Title</label>
+        <input type="text" name="title" required>
+    </div>
+
+    <br>
+
+    <div>
+        <label>Description</label>
+        <textarea name="description" rows="4" required></textarea>
+    </div>
+
+    <br>
+
+    <div>
+        <label>Target Progress</label>
+        <input
+                type="number"
+                name="targetProgress"
+                min="1"
+                required
+        >
+    </div>
+
+    <br>
+
+    <button type="submit">
+        Create Quest
+    </button>
+
+</form>
+
+<hr>
+
+<h3>Existing Quests</h3>
+
+<div th:if="${#lists.isEmpty(quests)}">
+    <p>No quests available.</p>
+</div>
+
+<div th:each="quest : ${quests}">
+
+    <h4 th:text="${quest.title}">
+        Quest Title
+    </h4>
+
+    <p th:text="${quest.description}">
+        Quest Description
+    </p>
+
+    <p>
+        Target:
+        <span th:text="${quest.targetProgress}">
+            0
+        </span>
+    </p>
+
+    <p>
+        Status:
+        <span th:text="${quest.active ? 'Active' : 'Inactive'}">
+            Active
+        </span>
+    </p>
+
+    <form
+            th:if="${quest.active}"
+            th:action="@{/admin/quests/{id}/delete(id=${quest.id})}"
+            method="post"
+    >
+        <button type="submit">
+            Deactivate Quest
+        </button>
+    </form>
+
+    <hr>
+
+</div>
+
+</body>
+</html>

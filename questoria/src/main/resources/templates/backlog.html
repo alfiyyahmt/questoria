@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Questoria - Backlog</title>
+</head>
+<body>
+
+<h1>Questoria</h1>
+
+<nav>
+    <a href="/">Dashboard</a>
+    <a href="/library">My Library</a>
+    <a href="/backlog">Backlog</a>
+    <a href="/quests">Quests</a>
+    <a href="/profile">Profile</a>
+    <a href="/logout">Logout</a>
+</nav>
+
+<hr>
+
+<h2>Backlog</h2>
+
+<div>
+    <a href="/backlog">All</a>
+    <a href="/backlog?status=PLAYING">Playing</a>
+    <a href="/backlog?status=ON_HOLD">On Hold</a>
+    <a href="/backlog?status=COMPLETED">Completed</a>
+    <a href="/backlog?status=DROPPED">Dropped</a>
+</div>
+
+<hr>
+
+<div th:if="${#lists.isEmpty(backlogItems)}">
+    <p>No games found.</p>
+</div>
+
+<div th:each="item : ${backlogItems}">
+
+    <img
+            th:src="${item.game.cover}"
+            th:alt="${item.game.title}"
+            width="200"
+    >
+
+    <h3 th:text="${item.game.title}">Game Title</h3>
+
+    <p>
+        Current status:
+        <strong th:text="${item.status}">BACKLOG</strong>
+    </p>
+
+    <form action="/backlog/status" method="post">
+        <input type="hidden" name="id" th:value="${item.id}">
+
+        <label>Status:</label>
+
+        <select name="status">
+            <option value="PLAYING"
+                    th:selected="${item.status == 'PLAYING'}">
+                Playing
+            </option>
+
+            <option value="ON_HOLD"
+                    th:selected="${item.status == 'ON_HOLD'}">
+                On Hold
+            </option>
+
+            <option value="COMPLETED"
+                    th:selected="${item.status == 'COMPLETED'}">
+                Completed
+            </option>
+
+            <option value="DROPPED"
+                    th:selected="${item.status == 'DROPPED'}">
+                Dropped
+            </option>
+        </select>
+
+        <button type="submit">Update Status</button>
+    </form>
+
+    <br>
+
+    <form action="/backlog/progress" method="post">
+        <input type="hidden" name="id" th:value="${item.id}">
+
+        <label>Progress:</label>
+
+        <input
+                type="number"
+                name="progress"
+                min="0"
+                max="100"
+                th:value="${item.progress}"
+        >
+
+        <span>%</span>
+
+        <button type="submit">Update Progress</button>
+    </form>
+
+    <br>
+
+    <form action="/backlog/notes" method="post">
+        <input type="hidden" name="id" th:value="${item.id}">
+
+        <label>Notes:</label>
+
+        <br>
+
+        <textarea
+                name="notes"
+                rows="4"
+                cols="50"
+                th:text="${item.notes}"
+        ></textarea>
+
+        <br>
+
+        <button type="submit">Save Notes</button>
+    </form>
+
+    <hr>
+
+</div>
+
+</body>
+</html>

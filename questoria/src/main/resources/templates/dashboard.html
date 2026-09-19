@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Questoria - Dashboard</title>
+</head>
+<body>
+
+<h1>Questoria</h1>
+
+<nav>
+  <a href="/">Dashboard</a>
+  <a href="/library">My Library</a>
+  <a href="/backlog">Backlog</a>
+  <a href="/quests">Quests</a>
+  <a href="/profile">Profile</a>
+  <a href="/logout">Logout</a>
+</nav>
+
+<hr>
+
+<h2>Welcome, <span th:text="${player.displayName}">Player</span></h2>
+
+<div>
+  <h3>Total Games</h3>
+  <p th:text="${totalGames}">0</p>
+</div>
+
+<div>
+  <h3>Backlog</h3>
+  <p th:text="${backlogCount}">0</p>
+</div>
+
+<div>
+  <h3>Playing</h3>
+  <p th:text="${playingCount}">0</p>
+</div>
+
+<div>
+  <h3>Completed</h3>
+  <p th:text="${completedCount}">0</p>
+</div>
+
+<h2>Recent Games</h2>
+
+<div th:if="${#lists.isEmpty(recentGames)}">
+  <p>No games yet.</p>
+</div>
+
+<div th:each="item : ${recentGames}">
+  <h3 th:text="${item.game.title}">Game Title</h3>
+
+  <img
+          th:src="${item.game.cover}"
+          th:alt="${item.game.title}"
+          width="200"
+  >
+
+  <p>
+    Status:
+    <span th:text="${item.status}">BACKLOG</span>
+  </p>
+
+  <p>
+    Progress:
+    <span th:text="${item.progress}">0</span>%
+  </p>
+</div>
+
+</body>
+</html>
