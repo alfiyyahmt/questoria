@@ -1,58 +1,306 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
 <head>
+
     <meta charset="UTF-8">
-    <title>Questoria - Profile</title>
+
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Questoria - Profile
+    </title>
+
+    <link
+            rel="stylesheet"
+            th:href="@{/css/style.css}">
+
 </head>
+
 <body>
 
-<h1>Questoria</h1>
+<div class="app-layout">
 
-<nav>
-    <a href="/">Dashboard</a>
-    <a href="/library">My Library</a>
-    <a href="/backlog">Backlog</a>
-    <a href="/quests">Quests</a>
-    <a href="/profile">Profile</a>
-    <a href="/logout">Logout</a>
-</nav>
 
-<hr>
+    <aside class="sidebar">
 
-<h2>Profile</h2>
+        <div class="sidebar-brand">
 
-<div>
+            <a href="/" class="brand">
+                QUESTORIA
+            </a>
 
-    <h3 th:text="${player.displayName}">
-        Player
-    </h3>
+            <span class="sidebar-tagline">
+                GAME TRACKER
+            </span>
 
-    <p>
-        Steam Username:
-        <span th:text="${player.steamAccount.username}">
-            Steam Username
-        </span>
-    </p>
+        </div>
 
-    <p>
-        Steam ID:
-        <span th:text="${player.steamAccount.steamId}">
-            Steam ID
-        </span>
-    </p>
 
-    <p>
-        Steam Profile:
-        <a
-                th:href="${player.steamAccount.profileUrl}"
-                th:text="${player.steamAccount.profileUrl}"
-                target="_blank"
-        >
-            Steam Profile
-        </a>
-    </p>
+        <nav class="sidebar-menu">
+
+            <a href="/" class="sidebar-link">
+
+                <span class="sidebar-icon">
+                    ⌂
+                </span>
+
+                <span>
+                    Home
+                </span>
+
+            </a>
+
+
+            <a href="/library"
+               class="sidebar-link">
+
+                <span class="sidebar-icon">
+                    ▣
+                </span>
+
+                <span>
+                    Library
+                </span>
+
+            </a>
+
+
+            <a href="/backlog"
+               class="sidebar-link">
+
+                <span class="sidebar-icon">
+                    ☰
+                </span>
+
+                <span>
+                    Backlog
+                </span>
+
+            </a>
+
+
+            <a href="/quests"
+               class="sidebar-link">
+
+                <span class="sidebar-icon">
+                    ◇
+                </span>
+
+                <span>
+                    Quests
+                </span>
+
+            </a>
+
+
+            <a href="/friends"
+               class="sidebar-link">
+
+                <span class="sidebar-icon">
+                    ♧
+                </span>
+
+                <span>
+                    Friends
+                </span>
+
+            </a>
+
+
+            <a href="/reviews"
+               class="sidebar-link">
+
+                <span class="sidebar-icon">
+                    ☆
+                </span>
+
+                <span>
+                    Reviews
+                </span>
+
+            </a>
+
+
+            <a href="/profile"
+               class="sidebar-link active">
+
+                <span class="sidebar-icon">
+                    ○
+                </span>
+
+                <span>
+                    Profile
+                </span>
+
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <a href="/logout"
+               class="sidebar-logout">
+
+                <span class="sidebar-icon">
+                    ↪
+                </span>
+
+                <span>
+                    Logout
+                </span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <main class="main-content">
+
+
+        <section class="dashboard-page">
+
+            <div class="dashboard-container">
+
+
+                <section class="profile-page-header">
+
+                    <span class="section-kicker">
+                        ACCOUNT
+                    </span>
+
+                    <h1>
+                        My Profile
+                    </h1>
+
+                </section>
+
+
+                <section class="profile-card">
+
+
+                    <div class="profile-main">
+
+
+                        <div class="profile-avatar">
+
+                            <img
+                                    th:if="${player.steamAccount != null && player.steamAccount.avatarUrl != null}"
+                                    th:src="${player.steamAccount.avatarUrl}"
+                                    alt="Steam Avatar">
+
+
+                            <div
+                                    class="profile-avatar-placeholder"
+                                    th:unless="${player.steamAccount != null && player.steamAccount.avatarUrl != null}">
+
+                                🎮
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="profile-identity">
+
+                            <h2
+                                    th:text="${player.displayName}">
+                                Player
+                            </h2>
+
+
+                            <p
+                                    th:text="${player.steamAccount != null ? player.steamAccount.username : 'Steam Account'}">
+                                Steam Username
+                            </p>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="profile-details">
+
+
+                        <div class="profile-detail">
+
+                            <span>
+                                Steam ID
+                            </span>
+
+                            <strong
+                                    th:text="${player.steamAccount != null ? player.steamAccount.steamId : '-'}">
+                                Steam ID
+                            </strong>
+
+                        </div>
+
+
+                        <div class="profile-detail">
+
+                            <span>
+                                Role
+                            </span>
+
+                            <strong
+                                    th:text="${player.role}">
+                                USER
+                            </strong>
+
+                        </div>
+
+
+                        <a
+                                class="profile-steam-link"
+                                th:if="${player.steamAccount != null && player.steamAccount.profileUrl != null}"
+                                th:href="${player.steamAccount.profileUrl}"
+                                target="_blank">
+
+                            View Steam Profile →
+
+                        </a>
+
+
+                    </div>
+
+
+                </section>
+
+
+            </div>
+
+        </section>
+
+
+        <footer class="footer">
+
+            <div class="footer-container">
+
+                <strong>
+                    QUESTORIA
+                </strong>
+
+                <span>
+                    Personal Steam Game Backlog & Quest Management System
+                </span>
+
+            </div>
+
+        </footer>
+
+
+    </main>
 
 </div>
 
+
 </body>
+
 </html>

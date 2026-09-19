@@ -13,39 +13,54 @@ public class QuestPlayerService {
 
     private final QuestPlayerRepository questPlayerRepository;
 
-    public QuestPlayerService(QuestPlayerRepository questPlayerRepository) {
+    public QuestPlayerService(
+            QuestPlayerRepository questPlayerRepository) {
+
         this.questPlayerRepository = questPlayerRepository;
     }
 
     public List<QuestPlayer> getAllQuestPlayers() {
+
         return questPlayerRepository.findAll();
     }
 
-    public QuestPlayer saveQuestPlayer(QuestPlayer questPlayer) {
+    public QuestPlayer saveQuestPlayer(
+            QuestPlayer questPlayer) {
+
         return questPlayerRepository.save(questPlayer);
     }
 
-    public QuestPlayer getQuestPlayer(Player player, Quest quest) {
+    public QuestPlayer getQuestPlayer(
+            Player player,
+            Quest quest) {
+
         return questPlayerRepository
                 .findByPlayerAndQuest(player, quest)
                 .orElse(null);
     }
 
-    public QuestPlayer joinQuest(Player player, Quest quest) {
+    public QuestPlayer joinQuest(
+            Player player,
+            Quest quest) {
 
-        QuestPlayer existing = getQuestPlayer(player, quest);
+        QuestPlayer existing =
+                getQuestPlayer(player, quest);
 
         if (existing != null) {
             return existing;
         }
 
-        QuestPlayer questPlayer = new QuestPlayer();
+        QuestPlayer questPlayer =
+                new QuestPlayer();
+
         questPlayer.setPlayer(player);
         questPlayer.setQuest(quest);
         questPlayer.setProgress(0);
         questPlayer.setCompleted(false);
 
-        return questPlayerRepository.save(questPlayer);
+        return questPlayerRepository.save(
+                questPlayer
+        );
     }
 
     public QuestPlayer updateProgress(
@@ -53,7 +68,8 @@ public class QuestPlayerService {
             Quest quest,
             int progress) {
 
-        QuestPlayer questPlayer = getQuestPlayer(player, quest);
+        QuestPlayer questPlayer =
+                getQuestPlayer(player, quest);
 
         if (questPlayer == null) {
             return null;
@@ -63,18 +79,28 @@ public class QuestPlayerService {
             progress = 0;
         }
 
+        if (quest.getTargetProgress() <= 0) {
+
+            questPlayer.setProgress(0);
+            questPlayer.setCompleted(false);
+
+            return questPlayerRepository.save(
+                    questPlayer
+            );
+        }
+
         if (progress > quest.getTargetProgress()) {
             progress = quest.getTargetProgress();
         }
 
         questPlayer.setProgress(progress);
 
-        if (progress >= quest.getTargetProgress()) {
-            questPlayer.setCompleted(true);
-        } else {
-            questPlayer.setCompleted(false);
-        }
+        questPlayer.setCompleted(
+                progress >= quest.getTargetProgress()
+        );
 
-        return questPlayerRepository.save(questPlayer);
+        return questPlayerRepository.save(
+                questPlayer
+        );
     }
 }

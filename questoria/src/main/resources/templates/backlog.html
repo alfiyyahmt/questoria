@@ -1,129 +1,434 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
 <head>
+
     <meta charset="UTF-8">
-    <title>Questoria - Backlog</title>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>My Backlog - Questoria</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/style.css}">
+
 </head>
+
 <body>
 
-<h1>Questoria</h1>
+<div class="app-layout">
 
-<nav>
-    <a href="/">Dashboard</a>
-    <a href="/library">My Library</a>
-    <a href="/backlog">Backlog</a>
-    <a href="/quests">Quests</a>
-    <a href="/profile">Profile</a>
-    <a href="/logout">Logout</a>
-</nav>
+    <aside class="sidebar">
 
-<hr>
+        <div class="sidebar-brand">
 
-<h2>Backlog</h2>
+            <a href="/"
+               class="brand">
+                QUESTORIA
+            </a>
 
-<div>
-    <a href="/backlog">All</a>
-    <a href="/backlog?status=PLAYING">Playing</a>
-    <a href="/backlog?status=ON_HOLD">On Hold</a>
-    <a href="/backlog?status=COMPLETED">Completed</a>
-    <a href="/backlog?status=DROPPED">Dropped</a>
-</div>
+            <span class="sidebar-tagline">
+                GAME TRACKER
+            </span>
 
-<hr>
+        </div>
 
-<div th:if="${#lists.isEmpty(backlogItems)}">
-    <p>No games found.</p>
-</div>
 
-<div th:each="item : ${backlogItems}">
+        <nav class="sidebar-menu">
 
-    <img
-            th:src="${item.game.cover}"
-            th:alt="${item.game.title}"
-            width="200"
-    >
+            <a href="/"
+               class="sidebar-link">
 
-    <h3 th:text="${item.game.title}">Game Title</h3>
+                <span class="sidebar-icon">
+                    ⌂
+                </span>
 
-    <p>
-        Current status:
-        <strong th:text="${item.status}">BACKLOG</strong>
-    </p>
+                <span>
+                    Home
+                </span>
 
-    <form action="/backlog/status" method="post">
-        <input type="hidden" name="id" th:value="${item.id}">
+            </a>
 
-        <label>Status:</label>
 
-        <select name="status">
-            <option value="PLAYING"
-                    th:selected="${item.status == 'PLAYING'}">
-                Playing
-            </option>
+            <th:block th:if="${isLoggedIn}">
 
-            <option value="ON_HOLD"
-                    th:selected="${item.status == 'ON_HOLD'}">
-                On Hold
-            </option>
+                <a href="/library"
+                   class="sidebar-link">
 
-            <option value="COMPLETED"
-                    th:selected="${item.status == 'COMPLETED'}">
-                Completed
-            </option>
+                    <span class="sidebar-icon">
+                        ▣
+                    </span>
 
-            <option value="DROPPED"
-                    th:selected="${item.status == 'DROPPED'}">
-                Dropped
-            </option>
-        </select>
+                    <span>
+                        Library
+                    </span>
 
-        <button type="submit">Update Status</button>
-    </form>
+                </a>
 
-    <br>
 
-    <form action="/backlog/progress" method="post">
-        <input type="hidden" name="id" th:value="${item.id}">
+                <a href="/backlog"
+                   class="sidebar-link active">
 
-        <label>Progress:</label>
+                    <span class="sidebar-icon">
+                        ☰
+                    </span>
 
-        <input
-                type="number"
-                name="progress"
-                min="0"
-                max="100"
-                th:value="${item.progress}"
-        >
+                    <span>
+                        Backlog
+                    </span>
 
-        <span>%</span>
+                </a>
 
-        <button type="submit">Update Progress</button>
-    </form>
 
-    <br>
+                <a href="/quests"
+                   class="sidebar-link">
 
-    <form action="/backlog/notes" method="post">
-        <input type="hidden" name="id" th:value="${item.id}">
+                    <span class="sidebar-icon">
+                        ◇
+                    </span>
 
-        <label>Notes:</label>
+                    <span>
+                        Quests
+                    </span>
 
-        <br>
+                </a>
 
-        <textarea
-                name="notes"
-                rows="4"
-                cols="50"
-                th:text="${item.notes}"
-        ></textarea>
 
-        <br>
+                <a href="/friends"
+                   class="sidebar-link">
 
-        <button type="submit">Save Notes</button>
-    </form>
+                    <span class="sidebar-icon">
+                        ♧
+                    </span>
 
-    <hr>
+                    <span>
+                        Friends
+                    </span>
+
+                </a>
+
+
+                <a href="/reviews"
+                   class="sidebar-link">
+
+                    <span class="sidebar-icon">
+                        ☆
+                    </span>
+
+                    <span>
+                        Reviews
+                    </span>
+
+                </a>
+
+
+                <a href="/profile"
+                   class="sidebar-link">
+
+                    <span class="sidebar-icon">
+                        ○
+                    </span>
+
+                    <span>
+                        Profile
+                    </span>
+
+                </a>
+
+            </th:block>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <th:block th:if="${isLoggedIn}">
+
+                <a href="/logout"
+                   class="sidebar-logout">
+
+                    <span class="sidebar-icon">
+                        ↪
+                    </span>
+
+                    <span>
+                        Logout
+                    </span>
+
+                </a>
+
+            </th:block>
+
+
+            <th:block th:unless="${isLoggedIn}">
+
+                <a href="/auth/steam"
+                   class="sidebar-steam-login">
+
+                    Login with Steam
+
+                </a>
+
+            </th:block>
+
+        </div>
+
+    </aside>
+
+
+    <main class="main-content">
+
+
+        <section class="dashboard-page">
+
+            <div class="backlog-container">
+
+
+                <section class="backlog-page-header">
+
+                    <span class="section-kicker">
+                        YOUR COLLECTION
+                    </span>
+
+                    <h1>
+                        My Backlog
+                    </h1>
+
+                    <p>
+                        Manage the games you want to play and keep track of your collection.
+                    </p>
+
+                </section>
+
+
+                <div class="backlog-filter">
+
+                    <a href="/backlog"
+                       th:classappend="${selectedStatus == null or selectedStatus.isBlank()} ? ' active' : ''">
+
+                        All
+
+                    </a>
+
+
+                    <a href="/backlog?status=BACKLOG"
+                       th:classappend="${selectedStatus == 'BACKLOG'} ? ' active' : ''">
+
+                        Backlog
+
+                    </a>
+
+
+                    <a href="/backlog?status=PLAYING"
+                       th:classappend="${selectedStatus == 'PLAYING'} ? ' active' : ''">
+
+                        Playing
+
+                    </a>
+
+
+                    <a href="/backlog?status=COMPLETED"
+                       th:classappend="${selectedStatus == 'COMPLETED'} ? ' active' : ''">
+
+                        Completed
+
+                    </a>
+
+                </div>
+
+
+                <div class="empty-state"
+                     th:if="${backlogItems == null or #lists.isEmpty(backlogItems)}">
+
+                    <div class="empty-icon">
+                        ☰
+                    </div>
+
+                    <h2>
+                        Your backlog is empty
+                    </h2>
+
+                    <p>
+                        Add games from your Steam library to start building your backlog.
+                    </p>
+
+                    <a href="/library"
+                       class="primary-button">
+
+                        Go to Library
+
+                    </a>
+
+                </div>
+
+
+                <div class="backlog-list"
+                     th:if="${backlogItems != null and !#lists.isEmpty(backlogItems)}">
+
+
+                    <article class="backlog-card"
+                             th:each="item : ${backlogItems}">
+
+
+                        <div class="backlog-cover">
+
+                            <img th:if="${item.game != null}"
+                                 th:src="${item.game.cover}"
+                                 th:alt="${item.game.title}"
+                                 th:attr="data-fallback=${'https://cdn.akamai.steamstatic.com/steam/apps/' + item.game.steamAppId + '/header.jpg'}"
+                                 onerror="if (this.dataset.fallback && this.src !== this.dataset.fallback) { this.src = this.dataset.fallback; }">
+
+                        </div>
+
+
+                        <div class="backlog-main">
+
+
+                            <div class="backlog-header">
+
+                                <div>
+
+                                    <h2 th:text="${item.game != null ? item.game.title : 'Unknown Game'}">
+                                        Game Title
+                                    </h2>
+
+
+                                    <p class="backlog-developer"
+                                       th:if="${item.game != null and item.game.developer != null and !item.game.developer.isBlank()}"
+                                       th:text="${item.game.developer}">
+
+                                        Developer
+
+                                    </p>
+
+                                </div>
+
+
+                                <span class="status-badge"
+                                      th:text="${item.status}">
+
+                                    BACKLOG
+
+                                </span>
+
+                            </div>
+
+
+                            <div class="backlog-controls">
+
+
+                                <form action="/backlog/status"
+                                      method="post">
+
+                                    <input type="hidden"
+                                           name="id"
+                                           th:value="${item.id}">
+
+
+                                    <select name="status">
+
+                                        <option value="BACKLOG"
+                                                th:selected="${item.status == 'BACKLOG'}">
+
+                                            Backlog
+
+                                        </option>
+
+
+                                        <option value="PLAYING"
+                                                th:selected="${item.status == 'PLAYING'}">
+
+                                            Playing
+
+                                        </option>
+
+
+                                        <option value="COMPLETED"
+                                                th:selected="${item.status == 'COMPLETED'}">
+
+                                            Completed
+
+                                        </option>
+
+                                    </select>
+
+
+                                    <button type="submit"
+                                            class="secondary-button">
+
+                                        Update
+
+                                    </button>
+
+                                </form>
+
+
+                                <form action="/backlog/delete"
+                                      method="post"
+                                      onsubmit="return confirm('Remove this game from your backlog?');">
+
+                                    <input type="hidden"
+                                           name="id"
+                                           th:value="${item.id}">
+
+
+                                    <button type="submit"
+                                            class="danger-button">
+
+                                        Remove
+
+                                    </button>
+
+                                </form>
+
+
+                                <a th:if="${item.game != null}"
+                                   th:href="@{/reviews(gameId=${item.game.id})}"
+                                   class="secondary-button">
+
+                                    Review
+
+                                </a>
+
+
+                            </div>
+
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+        <footer class="footer">
+
+            <div class="footer-inner">
+
+                <span>
+                    © 2026 Questoria
+                </span>
+
+                <span>
+                    Personal Steam Game Tracker
+                </span>
+
+            </div>
+
+        </footer>
+
+
+    </main>
 
 </div>
 
 </body>
+
 </html>

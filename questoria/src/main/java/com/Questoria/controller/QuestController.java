@@ -69,6 +69,7 @@ public class QuestController {
                     );
 
             if (questPlayer != null) {
+
                 questPlayers.put(
                         quest.getId(),
                         questPlayer
@@ -84,6 +85,16 @@ public class QuestController {
         model.addAttribute(
                 "questPlayers",
                 questPlayers
+        );
+
+        model.addAttribute(
+                "player",
+                player
+        );
+
+        model.addAttribute(
+                "isLoggedIn",
+                true
         );
 
         return "quests";
@@ -107,7 +118,9 @@ public class QuestController {
         Quest quest =
                 questService.getQuestById(id);
 
-        if (player == null || quest == null) {
+        if (player == null
+                || quest == null) {
+
             return "redirect:/quests";
         }
 
@@ -138,7 +151,9 @@ public class QuestController {
         Quest quest =
                 questService.getQuestById(id);
 
-        if (player == null || quest == null) {
+        if (player == null
+                || quest == null) {
+
             return "redirect:/quests";
         }
 
@@ -182,6 +197,8 @@ public class QuestController {
             @RequestParam String title,
             @RequestParam String description,
             @RequestParam int targetProgress,
+            @RequestParam String achievementName,
+            @RequestParam String achievementDescription,
             HttpSession session) {
 
         Player player =
@@ -197,28 +214,63 @@ public class QuestController {
             return "redirect:/";
         }
 
-        if (title == null || title.isBlank()) {
+        if (title == null
+                || title.isBlank()) {
+
             return "redirect:/admin/quests";
         }
 
-        if (description == null ||
-                description.isBlank()) {
+        if (description == null
+                || description.isBlank()) {
 
             return "redirect:/admin/quests";
         }
 
         if (targetProgress <= 0) {
+
             return "redirect:/admin/quests";
         }
 
-        Quest quest = new Quest();
+        if (achievementName == null
+                || achievementName.isBlank()) {
 
-        quest.setTitle(title.trim());
-        quest.setDescription(description.trim());
-        quest.setTargetProgress(targetProgress);
+            return "redirect:/admin/quests";
+        }
+
+        if (achievementDescription == null
+                || achievementDescription.isBlank()) {
+
+            return "redirect:/admin/quests";
+        }
+
+        Quest quest =
+                new Quest();
+
+        quest.setTitle(
+                title.trim()
+        );
+
+        quest.setDescription(
+                description.trim()
+        );
+
+        quest.setTargetProgress(
+                targetProgress
+        );
+
+        quest.setAchievementName(
+                achievementName.trim()
+        );
+
+        quest.setAchievementDescription(
+                achievementDescription.trim()
+        );
+
         quest.setActive(true);
 
-        questService.saveQuest(quest);
+        questService.saveQuest(
+                quest
+        );
 
         return "redirect:/admin/quests";
     }
@@ -245,8 +297,12 @@ public class QuestController {
                 questService.getQuestById(id);
 
         if (quest != null) {
+
             quest.setActive(false);
-            questService.saveQuest(quest);
+
+            questService.saveQuest(
+                    quest
+            );
         }
 
         return "redirect:/admin/quests";
@@ -256,7 +312,9 @@ public class QuestController {
             HttpSession session) {
 
         Long playerId =
-                (Long) session.getAttribute("playerId");
+                (Long) session.getAttribute(
+                        "playerId"
+                );
 
         if (playerId == null) {
             return null;

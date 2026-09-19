@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Questoria - Reviews
+    </title>
+
+    <link
+            rel="stylesheet"
+            th:href="@{/css/style.css}">
+
+</head>
+
+<body>
+
+<div class="app-layout">
+
+
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+
+            <a href="/" class="brand">
+                QUESTORIA
+            </a>
+
+            <span class="sidebar-tagline">
+                GAME TRACKER
+            </span>
+
+        </div>
+
+
+        <nav class="sidebar-menu">
+
+            <a href="/"
+               class="sidebar-link">
+
+                <span class="sidebar-icon">
+                    ⌂
+                </span>
+
+                <span>
+                    Home
+                </span>
+
+            </a>
+
+
+            <a href="/library"
+               class="sidebar-link">
+
+                <span class="sidebar-icon">
+                    ▣
+                </span>
+
+                <span>
+                    Library
+                </span>
+
+            </a>
+
+
+            <a href="/backlog"
+               class="sidebar-link">
+
+                <span class="sidebar-icon">
+                    ☰
+                </span>
+
+                <span>
+                    Backlog
+                </span>
+
+            </a>
+
+
+            <a href="/quests"
+               class="sidebar-link">
+
+                <span class="sidebar-icon">
+                    ◇
+                </span>
+
+                <span>
+                    Quests
+                </span>
+
+            </a>
+
+
+            <a href="/friends"
+               class="sidebar-link">
+
+                <span class="sidebar-icon">
+                    ♧
+                </span>
+
+                <span>
+                    Friends
+                </span>
+
+            </a>
+
+
+            <a href="/reviews"
+               class="sidebar-link active">
+
+                <span class="sidebar-icon">
+                    ☆
+                </span>
+
+                <span>
+                    Reviews
+                </span>
+
+            </a>
+
+
+            <a href="/profile"
+               class="sidebar-link">
+
+                <span class="sidebar-icon">
+                    ○
+                </span>
+
+                <span>
+                    Profile
+                </span>
+
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <a href="/logout"
+               class="sidebar-logout">
+
+                <span class="sidebar-icon">
+                    ↪
+                </span>
+
+                <span>
+                    Logout
+                </span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <main class="main-content">
+
+
+        <section class="dashboard-page">
+
+            <div class="dashboard-container">
+
+
+                <section class="library-page-header">
+
+                    <div>
+
+                        <span class="section-kicker">
+                            COMMUNITY
+                        </span>
+
+                        <h1>
+                            Reviews
+                        </h1>
+
+                        <p>
+                            See what players think about their games.
+                        </p>
+
+                    </div>
+
+                </section>
+
+
+                <div class="backlog-filter">
+
+                    <a href="/reviews"
+                       th:classappend="${selectedFilter == null or selectedFilter.isBlank()} ? ' active' : ''">
+
+                        All Reviews
+
+                    </a>
+
+
+                    <a href="/reviews?filter=mine"
+                       th:classappend="${selectedFilter == 'mine'} ? ' active' : ''">
+
+                        My Reviews
+
+                    </a>
+
+
+                    <a href="/reviews?filter=friends"
+                       th:classappend="${selectedFilter == 'friends'} ? ' active' : ''">
+
+                        Friends' Reviews
+
+                    </a>
+
+                </div>
+
+
+                <!-- WRITE REVIEW -->
+
+                <section class="review-form-card"
+                         th:if="${selectedGame != null}">
+
+                    <div class="review-form-header">
+
+                        <div>
+
+                            <span class="section-kicker">
+                                WRITE A REVIEW
+                            </span>
+
+                            <h2
+                                    th:text="${selectedGame.title}">
+                                Game Title
+                            </h2>
+
+                            <p>
+                                Share your thoughts about this game on Questoria.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <form action="/reviews/save"
+                          method="post"
+                          class="review-form">
+
+                        <input type="hidden"
+                               name="gameId"
+                               th:value="${selectedGame.id}">
+
+
+                        <div class="review-form-group">
+
+                            <label for="rating">
+                                Rating
+                            </label>
+
+                            <select id="rating"
+                                    name="rating"
+                                    required>
+
+                                <option value="">
+                                    Choose a rating
+                                </option>
+
+                                <option value="5"
+                                        th:selected="${existingReview != null and existingReview.rating == 5}">
+                                    ★★★★★ — Excellent
+                                </option>
+
+                                <option value="4"
+                                        th:selected="${existingReview != null and existingReview.rating == 4}">
+                                    ★★★★☆ — Good
+                                </option>
+
+                                <option value="3"
+                                        th:selected="${existingReview != null and existingReview.rating == 3}">
+                                    ★★★☆☆ — Okay
+                                </option>
+
+                                <option value="2"
+                                        th:selected="${existingReview != null and existingReview.rating == 2}">
+                                    ★★☆☆☆ — Not great
+                                </option>
+
+                                <option value="1"
+                                        th:selected="${existingReview != null and existingReview.rating == 1}">
+                                    ★☆☆☆☆ — Poor
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="review-form-group">
+
+                            <label for="content">
+                                Your Review
+                            </label>
+
+                            <textarea id="content"
+                                      name="content"
+                                      rows="5"
+                                      placeholder="Write your thoughts about this game..."
+                                      required
+                                      th:text="${existingReview != null ? existingReview.content : ''}"></textarea>
+
+                        </div>
+
+
+                        <div class="review-form-actions">
+
+                            <button type="submit"
+                                    class="primary-button">
+
+                                <span th:if="${existingReview == null}">
+                                    Publish Review
+                                </span>
+
+                                <span th:if="${existingReview != null}">
+                                    Update Review
+                                </span>
+
+                            </button>
+
+
+                            <a href="/reviews"
+                               class="secondary-button">
+
+                                Cancel
+
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </section>
+
+
+                <!-- EMPTY -->
+
+                <div class="empty-state"
+                     th:if="${(reviews == null or #lists.isEmpty(reviews)) and selectedGame == null}">
+
+                    <div class="empty-icon">
+                        ☆
+                    </div>
+
+                    <h3>
+                        No reviews yet
+                    </h3>
+
+                    <p th:if="${selectedFilter == 'friends'}">
+                        Your Steam friends have not posted any reviews on Questoria yet.
+                    </p>
+
+                    <p th:unless="${selectedFilter == 'friends'}">
+                        Reviews from players will appear here.
+                    </p>
+
+                </div>
+
+
+                <!-- REVIEWS LIST -->
+
+                <section
+                        class="reviews-list"
+                        th:if="${reviews != null and !#lists.isEmpty(reviews)}">
+
+
+                    <article
+                            class="review-card"
+                            th:each="review : ${reviews}">
+
+
+                        <div class="review-game-cover">
+
+                            <img
+                                    th:if="${review.game != null}"
+                                    th:src="${review.game.cover}"
+                                    th:alt="${review.game.title}"
+                                    th:attr="data-fallback=${review.game.steamAppId != null ? 'https://shared.akamai.steamstatic.com/steam/apps/' + review.game.steamAppId + '/header.jpg' : ''}"
+                                    onerror="if (this.dataset.fallback && this.src !== this.dataset.fallback) { this.src = this.dataset.fallback; }">
+
+                        </div>
+
+
+                        <div class="review-content">
+
+
+                            <div class="review-header">
+
+                                <div>
+
+                                    <h2
+                                            th:if="${review.game != null}"
+                                            th:text="${review.game.title}">
+
+                                        Game Title
+
+                                    </h2>
+
+
+                                    <p class="review-author">
+
+                                        <span
+                                                th:text="${review.player != null ? review.player.displayName : 'Unknown Player'}">
+
+                                            Player
+
+                                        </span>
+
+                                        <span>
+                                            reviewed this game
+                                        </span>
+
+                                    </p>
+
+                                </div>
+
+
+                                <div class="review-rating">
+
+                                    <span
+                                            th:each="star : ${#numbers.sequence(1, 5)}"
+                                            th:text="${star <= review.rating ? '★' : '☆'}">
+
+                                        ★
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <p class="review-text"
+                               th:text="${review.content}">
+
+                                This is a review.
+
+                            </p>
+
+
+                            <div class="review-date"
+                                 th:if="${review.createdAt != null}"
+                                 th:text="${#temporals.format(review.createdAt, 'dd MMM yyyy')}">
+
+                                19 Sep 2026
+
+                            </div>
+
+
+                        </div>
+
+                    </article>
+
+
+                </section>
+
+
+            </div>
+
+        </section>
+
+
+        <footer class="footer">
+
+            <div class="footer-container">
+
+                <strong>
+                    QUESTORIA
+                </strong>
+
+                <span>
+                    Personal Steam Game Backlog & Quest Management System
+                </span>
+
+            </div>
+
+        </footer>
+
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

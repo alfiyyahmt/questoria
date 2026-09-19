@@ -108,6 +108,11 @@ public class AuthenticationController {
                                 .path("profileurl")
                                 .asText()
                 );
+                steamAccount.setAvatarUrl(
+                        steamPlayer
+                                .path("avatarfull")
+                                .asText()
+                );
             }
 
         } catch (Exception e) {
@@ -136,7 +141,6 @@ public class AuthenticationController {
 
         playerService.savePlayer(player);
 
-        steamGameService.importGames(steamId);
 
         session.setAttribute(
                 "steamId",
@@ -168,6 +172,6 @@ public class AuthenticationController {
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/auth/steam";
+        return "redirect:/";
     }
 }

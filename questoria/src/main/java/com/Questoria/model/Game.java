@@ -74,4 +74,14 @@ public class Game {
     public void setBacklogItems(List<BacklogItem> backlogItems) {
         this.backlogItems = backlogItems;
     }
+
+    @OneToMany(mappedBy = "game")
+    private List<Review> reviews;
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
 }

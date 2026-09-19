@@ -1,73 +1,166 @@
 package com.Questoria.controller;
 
+import com.Questoria.dto.DashboardQuest;
 import com.Questoria.model.BacklogItem;
 import com.Questoria.model.Player;
+import com.Questoria.model.Quest;
+import com.Questoria.model.QuestPlayer;
 import com.Questoria.service.BacklogService;
 import com.Questoria.service.PlayerService;
+import com.Questoria.service.QuestPlayerService;
+import com.Questoria.service.QuestService;
+import com.Questoria.service.SteamStoreService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class DashboardController {
 
     private final BacklogService backlogService;
     private final PlayerService playerService;
+    private final SteamStoreService steamStoreService;
+    private final QuestService questService;
+    private final QuestPlayerService questPlayerService;
 
     public DashboardController(
             BacklogService backlogService,
-            PlayerService playerService) {
+            PlayerService playerService,
+            SteamStoreService steamStoreService,
+            QuestService questService,
+            QuestPlayerService questPlayerService) {
+
         this.backlogService = backlogService;
         this.playerService = playerService;
+        this.steamStoreService = steamStoreService;
+        this.questService = questService;
+        this.questPlayerService = questPlayerService;
     }
 
     @GetMapping("/")
     public String dashboard(
+            @RequestParam(required = false) String search,
             Model model,
             HttpSession session) {
 
-        Long playerId = (Long) session.getAttribute("playerId");
+        Long playerId =
+                (Long) session.getAttribute("playerId");
 
         if (playerId == null) {
-            return "redirect:/auth/steam";
+
+            model.addAttribute(
+                    "isLoggedIn",
+                    false
+            );
+
+            model.addAttribute(
+                    "featuredGames",
+                    steamStoreService.getFeaturedGames()
+            );
+
+            addSearchResults(
+                    search,
+                    model
+            );
+
+            return "dashboard";
         }
 
-        Player player = playerService.getPlayerById(playerId);
+        Player player =
+                playerService.getPlayerById(playerId);
 
         if (player == null) {
-            return "redirect:/auth/steam";
+
+            model.addAttribute(
+                    "isLoggedIn",
+                    false
+            );
+
+            model.addAttribute(
+                    "featuredGames",
+                    steamStoreService.getFeaturedGames()
+            );
+
+            addSearchResults(
+                    search,
+                    model
+            );
+
+            return "dashboard";
         }
 
         List<BacklogItem> backlogItems =
                 backlogService.getBacklogByPlayer(player);
 
-        long totalGames = backlogItems.size();
+        long totalGames =
+                backlogItems.size();
 
-        long playingCount = backlogItems.stream()
-                .filter(item -> "PLAYING".equalsIgnoreCase(item.getStatus()))
-                .count();
+        long playingCount =
+                backlogItems.stream()
+                        .filter(item ->
+                                "PLAYING".equalsIgnoreCase(
+                                        item.getStatus()
+                                )
+                        )
+                        .count();
 
-        long completedCount = backlogItems.stream()
-                .filter(item -> "COMPLETED".equalsIgnoreCase(item.getStatus()))
-                .count();
+        long completedCount =
+                backlogItems.stream()
+                        .filter(item ->
+                                "COMPLETED".equalsIgnoreCase(
+                                        item.getStatus()
+                                )
+                        )
+                        .count();
 
-        long backlogCount = backlogItems.stream()
-                .filter(item ->
-                        !"PLAYING".equalsIgnoreCase(item.getStatus())
-                                && !"COMPLETED".equalsIgnoreCase(item.getStatus())
-                                && !"ON HOLD".equalsIgnoreCase(item.getStatus())
-                                && !"DROPPED".equalsIgnoreCase(item.getStatus())
-                )
-                .count();
+        long backlogCount =
+                backlogItems.stream()
+                        .filter(item ->
+                                !"PLAYING".equalsIgnoreCase(
+                                        item.getStatus()
+                                )
+                                        && !"COMPLETED".equalsIgnoreCase(
+                                        item.getStatus()
+                                )
+                                        && !"ON_HOLD".equalsIgnoreCase(
+                                        item.getStatus()
+                                )
+                                        && !"DROPPED".equalsIgnoreCase(
+                                        item.getStatus()
+                                )
+                        )
+                        .count();
 
-        model.addAttribute("player", player);
-        model.addAttribute("totalGames", totalGames);
-        model.addAttribute("backlogCount", backlogCount);
-        model.addAttribute("playingCount", playingCount);
-        model.addAttribute("completedCount", completedCount);
+        model.addAttribute(
+                "player",
+                player
+        );
+
+        model.addAttribute(
+                "totalGames",
+                totalGames
+        );
+
+        model.addAttribute(
+                "backlogCount",
+                backlogCount
+        );
+
+        model.addAttribute(
+                "playingCount",
+                playingCount
+        );
+
+        model.addAttribute(
+                "completedCount",
+                completedCount
+        );
 
         model.addAttribute(
                 "recentGames",
@@ -76,6 +169,109 @@ public class DashboardController {
                         .toList()
         );
 
+        model.addAttribute(
+                "activeQuests",
+                getDashboardQuests(player)
+        );
+
+        model.addAttribute(
+                "isLoggedIn",
+                true
+        );
+
+        addSearchResults(
+                search,
+                model
+        );
+
         return "dashboard";
+    }
+
+
+    private List<DashboardQuest> getDashboardQuests(
+            Player player) {
+
+        List<DashboardQuest> dashboardQuests =
+                new ArrayList<>();
+
+        List<Quest> quests =
+                questService.getActiveQuests();
+
+        for (Quest quest : quests) {
+
+            QuestPlayer questPlayer =
+                    questPlayerService.getQuestPlayer(
+                            player,
+                            quest
+                    );
+
+            DashboardQuest dashboardQuest =
+                    new DashboardQuest();
+
+            dashboardQuest.setId(
+                    quest.getId()
+            );
+
+            dashboardQuest.setTitle(
+                    quest.getTitle()
+            );
+
+            dashboardQuest.setDescription(
+                    quest.getDescription()
+            );
+
+            dashboardQuest.setTargetProgress(
+                    quest.getTargetProgress()
+            );
+
+            if (questPlayer != null) {
+
+                dashboardQuest.setJoined(true);
+
+                dashboardQuest.setProgress(
+                        questPlayer.getProgress()
+                );
+
+                dashboardQuest.setCompleted(
+                        questPlayer.isCompleted()
+                );
+
+            } else {
+
+                dashboardQuest.setJoined(false);
+
+                dashboardQuest.setProgress(0);
+
+                dashboardQuest.setCompleted(false);
+            }
+
+            dashboardQuests.add(
+                    dashboardQuest
+            );
+        }
+
+        return dashboardQuests;
+    }
+
+
+    private void addSearchResults(
+            String search,
+            Model model) {
+
+        if (search != null && !search.isBlank()) {
+
+            List<Map<String, Object>> searchResults =
+                    steamStoreService.searchGames(search);
+
+            model.addAttribute(
+                    "searchResults",
+                    searchResults
+            );
+
+            model.addAttribute(
+                    "searchQuery",
+                    search
+            );
+        }
     }
 }

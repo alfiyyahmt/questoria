@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${game.name + ' - QUESTORIA'}">
+        Game Detail - QUESTORIA
+    </title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/style.css}">
+
+    <style>
+
+        .game-detail-page {
+            padding: 32px 40px 48px;
+        }
+
+        .game-detail-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .game-detail-card {
+            background: #ffffff;
+            border: 1px solid #e3e7e4;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(30, 40, 55, 0.04);
+        }
+
+        .game-detail-header {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px 0;
+            background: #f7f8f7;
+        }
+
+        .game-detail-header img {
+            display: block;
+            width: 460px;
+            height: 215px;
+            max-width: calc(100% - 40px);
+            object-fit: contain;
+            object-position: center;
+            border-radius: 8px;
+        }
+
+        .game-detail-content {
+            padding: 30px;
+        }
+
+        .game-detail-title {
+            margin: 0 0 10px;
+            font-size: 28px;
+            line-height: 1.25;
+            font-weight: 700;
+            color: #20242a;
+        }
+
+        .game-detail-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 18px;
+            margin-bottom: 24px;
+            color: #687078;
+            font-size: 14px;
+        }
+
+        .game-detail-meta span {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .game-detail-description {
+            margin-bottom: 26px;
+            color: #687078;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .game-detail-description p {
+            margin: 0;
+        }
+
+        .game-detail-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .game-detail-add-form {
+            margin: 0;
+        }
+
+        .game-detail-add-button {
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .game-detail-add-button:hover {
+            opacity: 0.92;
+        }
+
+        .game-detail-back {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 40px;
+            padding: 0 18px;
+            border-radius: 8px;
+            border: 1px solid #e3e7e4;
+            background: #ffffff;
+            color: #587160;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: 0.2s ease;
+        }
+
+        .game-detail-back:hover {
+            background: #f3f6f3;
+        }
+
+        .game-detail-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 28px;
+            padding-top: 24px;
+            border-top: 1px solid #edf0ee;
+        }
+
+        .game-detail-info-item {
+            padding: 15px 16px;
+            background: #f7f8f7;
+            border-radius: 10px;
+        }
+
+        .game-detail-info-label {
+            display: block;
+            margin-bottom: 5px;
+            color: #8a9198;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .game-detail-info-value {
+            color: #20242a;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 900px) {
+
+            .game-detail-page {
+                padding: 28px 24px 40px;
+            }
+
+        }
+
+        @media (max-width: 640px) {
+
+            .game-detail-page {
+                padding: 20px 16px 32px;
+            }
+
+            .game-detail-header {
+                padding: 18px 0;
+            }
+
+            .game-detail-header img {
+                width: 460px;
+                height: 215px;
+                max-width: calc(100% - 32px);
+            }
+
+            .game-detail-content {
+                padding: 22px;
+            }
+
+            .game-detail-title {
+                font-size: 23px;
+            }
+
+            .game-detail-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .game-detail-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .game-detail-add-form,
+            .game-detail-add-button,
+            .game-detail-back {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+
+            <a href="/" class="brand">
+                QUESTORIA
+            </a>
+
+            <span class="sidebar-tagline">
+                GAME TRACKER
+            </span>
+
+        </div>
+
+
+        <nav class="sidebar-menu">
+
+            <a href="/"
+               class="sidebar-link">
+
+                <span class="sidebar-icon">⌂</span>
+
+                <span>Home</span>
+
+            </a>
+
+
+            <th:block th:if="${isLoggedIn}">
+
+                <a href="/library"
+                   class="sidebar-link">
+
+                    <span class="sidebar-icon">▣</span>
+
+                    <span>Library</span>
+
+                </a>
+
+
+                <a href="/backlog"
+                   class="sidebar-link">
+
+                    <span class="sidebar-icon">☰</span>
+
+                    <span>Backlog</span>
+
+                </a>
+
+
+                <a href="/quests"
+                   class="sidebar-link">
+
+                    <span class="sidebar-icon">◇</span>
+
+                    <span>Quests</span>
+
+                </a>
+
+
+                <a href="/friends"
+                   class="sidebar-link">
+
+                    <span class="sidebar-icon">♧</span>
+
+                    <span>Friends</span>
+
+                </a>
+
+
+                <a href="/profile"
+                   class="sidebar-link">
+
+                    <span class="sidebar-icon">○</span>
+
+                    <span>Profile</span>
+
+                </a>
+
+
+                <a th:if="${isAdmin}"
+                   href="/admin"
+                   class="sidebar-link">
+
+                    <span class="sidebar-icon">⚙</span>
+
+                    <span>Admin</span>
+
+                </a>
+
+            </th:block>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <th:block th:if="${isLoggedIn}">
+
+                <a href="/logout"
+                   class="sidebar-logout">
+
+                    <span class="sidebar-icon">↪</span>
+
+                    <span>Logout</span>
+
+                </a>
+
+            </th:block>
+
+
+            <th:block th:unless="${isLoggedIn}">
+
+                <a href="/auth/steam"
+                   class="sidebar-steam-login">
+
+                    Login with Steam
+
+                </a>
+
+            </th:block>
+
+        </div>
+
+    </aside>
+
+
+    <main class="main-content">
+
+        <div class="game-detail-page">
+
+            <div class="game-detail-container">
+
+                <div class="game-detail-card">
+
+
+                    <div class="game-detail-header">
+
+                        <img
+                                th:src="${game.headerImage}"
+                                th:alt="${game.name}">
+
+                    </div>
+
+
+                    <div class="game-detail-content">
+
+
+                        <h1 class="game-detail-title"
+                            th:text="${game.name}">
+
+                            Game Name
+
+                        </h1>
+
+
+                        <div class="game-detail-meta">
+
+                            <span
+                                    th:if="${game.developer != null and !game.developer.isBlank()}"
+                                    th:text="${game.developer}">
+                                Developer
+                            </span>
+
+                            <span
+                                    th:if="${game.genre != null and !game.genre.isBlank()}"
+                                    th:text="${game.genre}">
+                                Genre
+                            </span>
+
+                        </div>
+
+
+                        <div class="game-detail-description">
+
+                            <p
+                                    th:if="${game.description != null and !game.description.isBlank()}"
+                                    th:utext="${game.description}">
+                            </p>
+
+                            <p
+                                    th:unless="${game.description != null and !game.description.isBlank()}">
+                                No description available for this game.
+                            </p>
+
+                        </div>
+
+
+                        <div class="game-detail-actions">
+
+
+                            <form
+                                    th:action="@{/backlog/add}"
+                                    method="post"
+                                    class="game-detail-add-form">
+
+                                <input
+                                        type="hidden"
+                                        name="appId"
+                                        th:value="${game.appId}">
+
+                                <input
+                                        type="hidden"
+                                        name="name"
+                                        th:value="${game.name}">
+
+                                <input
+                                        type="hidden"
+                                        name="headerImage"
+                                        th:value="${game.headerImage}">
+
+                                <input
+                                        type="hidden"
+                                        name="developer"
+                                        th:value="${game.developer}">
+
+                                <input
+                                        type="hidden"
+                                        name="genre"
+                                        th:value="${game.genre}">
+
+                                <button
+                                        type="submit"
+                                        class="primary-button game-detail-add-button">
+
+                                    + Add to Backlog
+
+                                </button>
+
+                            </form>
+
+
+                            <a
+                                    href="/"
+                                    class="game-detail-back">
+
+                                Back to Home
+
+                            </a>
+
+
+                        </div>
+
+
+                        <div class="game-detail-info-grid">
+
+
+                            <div class="game-detail-info-item">
+
+                                <span class="game-detail-info-label">
+                                    Steam App ID
+                                </span>
+
+                                <span
+                                        class="game-detail-info-value"
+                                        th:text="${game.appId}">
+                                    -
+                                </span>
+
+                            </div>
+
+
+                            <div
+                                    class="game-detail-info-item"
+                                    th:if="${game.developer != null and !game.developer.isBlank()}">
+
+                                <span class="game-detail-info-label">
+                                    Developer
+                                </span>
+
+                                <span
+                                        class="game-detail-info-value"
+                                        th:text="${game.developer}">
+                                    -
+                                </span>
+
+                            </div>
+
+
+                            <div
+                                    class="game-detail-info-item"
+                                    th:if="${game.genre != null and !game.genre.isBlank()}">
+
+                                <span class="game-detail-info-label">
+                                    Genre
+                                </span>
+
+                                <span
+                                        class="game-detail-info-value"
+                                        th:text="${game.genre}">
+                                    -
+                                </span>
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <footer class="footer">
+
+            <div class="footer-container">
+
+                <strong>QUESTORIA</strong>
+
+                <span>
+                    Personal Steam Game Backlog & Quest Management System
+                </span>
+
+            </div>
+
+        </footer>
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

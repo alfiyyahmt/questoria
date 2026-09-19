@@ -16,6 +16,7 @@ public class QuestPlayer {
     private Quest quest;
 
     private int progress;
+
     private boolean completed;
 
     public QuestPlayer() {

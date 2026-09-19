@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<aside class="sidebar" th:fragment="sidebar">
+
+    <div class="sidebar-brand">
+
+        <a href="/" class="sidebar-logo">
+            QUESTORIA
+        </a>
+
+        <span class="sidebar-subtitle">
+            GAME TRACKER
+        </span>
+
+    </div>
+
+    <nav class="sidebar-menu">
+
+        <a href="/"
+           class="sidebar-link"
+           th:classappend="${activePage == 'home'} ? ' active' : ''">
+
+            <span class="sidebar-icon">⌂</span>
+            <span class="sidebar-text">Home</span>
+
+        </a>
+
+        <a href="/library"
+           class="sidebar-link"
+           th:classappend="${activePage == 'library'} ? ' active' : ''">
+
+            <span class="sidebar-icon">▣</span>
+            <span class="sidebar-text">Library</span>
+
+        </a>
+
+        <a href="/backlog"
+           class="sidebar-link"
+           th:classappend="${activePage == 'backlog'} ? ' active' : ''">
+
+            <span class="sidebar-icon">☰</span>
+            <span class="sidebar-text">Backlog</span>
+
+        </a>
+
+        <a href="/quests"
+           class="sidebar-link"
+           th:classappend="${activePage == 'quests'} ? ' active' : ''">
+
+            <span class="sidebar-icon">◇</span>
+            <span class="sidebar-text">Quests</span>
+
+        </a>
+
+        <a href="/profile"
+           class="sidebar-link"
+           th:classappend="${activePage == 'profile'} ? ' active' : ''">
+
+            <span class="sidebar-icon">○</span>
+            <span class="sidebar-text">Profile</span>
+
+        </a>
+
+        <a th:if="${isAdmin}"
+           href="/admin"
+           class="sidebar-link"
+           th:classappend="${activePage == 'admin'} ? ' active' : ''">
+
+            <span class="sidebar-icon">⚙</span>
+            <span class="sidebar-text">Admin</span>
+
+        </a>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+
+        <a th:if="${isLoggedIn}"
+           href="/logout"
+           class="sidebar-link logout-link">
+
+            <span class="sidebar-icon">↪</span>
+            <span class="sidebar-text">Logout</span>
+
+        </a>
+
+        <a th:unless="${isLoggedIn}"
+           href="/auth/steam"
+           class="sidebar-steam-login">
+
+            Login with Steam
+
+        </a>
+
+    </div>
+
+</aside>
+
+</body>
+</html>

@@ -1,63 +1,350 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
 <head>
+
     <meta charset="UTF-8">
-    <title>Questoria - My Library</title>
+
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Questoria - My Library
+    </title>
+
+    <link
+            rel="stylesheet"
+            th:href="@{/css/style.css}">
+
 </head>
+
 <body>
 
-<h1>Questoria</h1>
+<div class="app-layout">
 
-<nav>
-    <a href="/">Dashboard</a>
-    <a href="/library">My Library</a>
-    <a href="/backlog">Backlog</a>
-    <a href="/quests">Quests</a>
-    <a href="/profile">Profile</a>
-    <a href="/logout">Logout</a>
-</nav>
 
-<hr>
+    <aside class="sidebar">
 
-<h2>My Library</h2>
+        <div class="sidebar-brand">
 
-<div th:if="${#lists.isEmpty(backlogItems)}">
-    <p>No games found.</p>
-</div>
+            <a href="/" class="brand">
+                QUESTORIA
+            </a>
 
-<div th:each="item : ${backlogItems}">
-
-    <div>
-        <img
-                th:src="${item.game.cover}"
-                th:alt="${item.game.title}"
-                width="200"
-        >
-
-        <h3 th:text="${item.game.title}">Game Title</h3>
-
-        <p>
-            Developer:
-            <span th:text="${item.game.developer != null && !item.game.developer.isBlank() ? item.game.developer : 'Steam Game'}">
-                Steam Game
+            <span class="sidebar-tagline">
+                GAME TRACKER
             </span>
-        </p>
 
-        <p>
-            Status:
-            <span th:text="${item.status}">BACKLOG</span>
-        </p>
+        </div>
 
-        <p>
-            Progress:
-            <span th:text="${item.progress}">0</span>%
-        </p>
 
-    </div>
+        <nav class="sidebar-menu">
 
-    <hr>
+            <a href="/" class="sidebar-link">
+
+                <span class="sidebar-icon">
+                    ⌂
+                </span>
+
+                <span>
+                    Home
+                </span>
+
+            </a>
+
+
+            <a href="/library"
+               class="sidebar-link active">
+
+                <span class="sidebar-icon">
+                    ▣
+                </span>
+
+                <span>
+                    Library
+                </span>
+
+            </a>
+
+
+            <a href="/backlog"
+               class="sidebar-link">
+
+                <span class="sidebar-icon">
+                    ☰
+                </span>
+
+                <span>
+                    Backlog
+                </span>
+
+            </a>
+
+
+            <a href="/quests"
+               class="sidebar-link">
+
+                <span class="sidebar-icon">
+                    ◇
+                </span>
+
+                <span>
+                    Quests
+                </span>
+
+            </a>
+
+
+            <a href="/friends"
+               class="sidebar-link">
+
+                <span class="sidebar-icon">
+                    ♧
+                </span>
+
+                <span>
+                    Friends
+                </span>
+
+            </a>
+
+
+            <a href="/reviews"
+               class="sidebar-link">
+
+                <span class="sidebar-icon">
+                    ☆
+                </span>
+
+                <span>
+                    Reviews
+                </span>
+
+            </a>
+
+
+            <a href="/profile"
+               class="sidebar-link">
+
+                <span class="sidebar-icon">
+                    ○
+                </span>
+
+                <span>
+                    Profile
+                </span>
+
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <a href="/logout"
+               class="sidebar-logout">
+
+                <span class="sidebar-icon">
+                    ↪
+                </span>
+
+                <span>
+                    Logout
+                </span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <main class="main-content">
+
+
+        <section class="dashboard-page">
+
+            <div class="dashboard-container">
+
+
+                <section class="library-page-header">
+
+                    <div>
+
+                        <span class="section-kicker">
+                            YOUR COLLECTION
+                        </span>
+
+                        <h1>
+                            My Library
+                        </h1>
+
+                        <p>
+                            Games imported from your Steam account.
+                        </p>
+
+                    </div>
+
+
+                    <form
+                            th:action="@{/library/import}"
+                            method="post">
+
+                        <button
+                                type="submit"
+                                class="primary-button">
+
+                            Import Game Library
+
+                        </button>
+
+                    </form>
+
+                </section>
+
+
+                <div
+                        class="empty-state"
+                        th:if="${#lists.isEmpty(backlogItems)}">
+
+                    <div class="empty-icon">
+                        🎮
+                    </div>
+
+                    <h3>
+                        No games found
+                    </h3>
+
+                    <p>
+                        Import your Steam game library to add
+                        your games to Questoria.
+                    </p>
+
+
+                    <form
+                            th:action="@{/library/import}"
+                            method="post">
+
+                        <button
+                                type="submit"
+                                class="primary-button">
+
+                            Import Game Library
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+
+                <section
+                        class="library-game-grid"
+                        th:if="${!#lists.isEmpty(backlogItems)}">
+
+
+                    <article
+                            class="library-game-card"
+                            th:each="item : ${backlogItems}">
+
+
+                        <div class="library-game-cover">
+
+                            <img
+                                    th:src="${item.game.cover}"
+                                    th:alt="${item.game.title}"
+                                    th:attr="data-fallback=${item.game.steamAppId != null ? 'https://cdn.akamai.steamstatic.com/steam/apps/' + item.game.steamAppId + '/header.jpg' : ''}"
+                                    onerror="if (this.dataset.fallback && this.src !== this.dataset.fallback) { this.src = this.dataset.fallback; }">
+
+                        </div>
+
+
+                        <div class="library-game-info">
+
+                            <h3
+                                    th:text="${item.game.title}">
+                                Game Title
+                            </h3>
+
+
+                            <p
+                                    class="library-game-developer"
+                                    th:text="${item.game.developer != null && !item.game.developer.isBlank() ? item.game.developer : 'Steam Game'}">
+                                Steam Game
+                            </p>
+
+
+                            <div class="library-game-meta">
+
+                                <span
+                                        class="status-badge"
+                                        th:text="${item.status}">
+                                    BACKLOG
+                                </span>
+
+
+                                <span
+                                        class="library-review-rating"
+                                        th:if="${userReviews[item.game.id] != null}">
+
+                                    <span
+                                            th:each="star : ${#numbers.sequence(1, 5)}"
+                                            th:text="${star <= userReviews[item.game.id].rating ? '★' : '☆'}">
+                                        ★
+                                    </span>
+
+                                </span>
+
+
+                                <span
+                                        class="library-review-unrated"
+                                        th:if="${userReviews[item.game.id] == null}">
+
+                                    ☆ Not reviewed
+
+                                </span>
+
+                            </div>
+
+
+                        </div>
+
+
+                    </article>
+
+
+                </section>
+
+
+            </div>
+
+        </section>
+
+
+        <footer class="footer">
+
+            <div class="footer-container">
+
+                <strong>
+                    QUESTORIA
+                </strong>
+
+                <span>
+                    Personal Steam Game Backlog & Quest Management System
+                </span>
+
+            </div>
+
+        </footer>
+
+
+    </main>
 
 </div>
+
 
 </body>
+
 </html>

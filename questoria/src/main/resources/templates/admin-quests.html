@@ -1,107 +1,505 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
 <head>
+
     <meta charset="UTF-8">
-    <title>Questoria - Admin Quests</title>
+
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Questoria - Admin Quests
+    </title>
+
+    <link
+            rel="stylesheet"
+            th:href="@{/css/style.css}">
+
 </head>
+
 <body>
 
-<h1>Questoria</h1>
+<div class="app-layout">
 
-<nav>
-    <a href="/">Dashboard</a>
-    <a href="/library">My Library</a>
-    <a href="/backlog">Backlog</a>
-    <a href="/quests">Quests</a>
-    <a href="/profile">Profile</a>
-    <a href="/logout">Logout</a>
-</nav>
 
-<hr>
+    <aside class="sidebar">
 
-<h2>Admin - Manage Quests</h2>
+        <div class="sidebar-brand">
 
-<h3>Create Quest</h3>
+            <a href="/" class="brand">
+                QUESTORIA
+            </a>
 
-<form action="/admin/quests" method="post">
+            <span class="sidebar-tagline">
+                GAME TRACKER
+            </span>
 
-    <div>
-        <label>Title</label>
-        <input type="text" name="title" required>
-    </div>
+        </div>
 
-    <br>
 
-    <div>
-        <label>Description</label>
-        <textarea name="description" rows="4" required></textarea>
-    </div>
+        <nav class="sidebar-menu">
 
-    <br>
 
-    <div>
-        <label>Target Progress</label>
-        <input
-                type="number"
-                name="targetProgress"
-                min="1"
-                required
-        >
-    </div>
+            <a href="/"
+               class="sidebar-link">
 
-    <br>
+                <span class="sidebar-icon">
+                    ⌂
+                </span>
 
-    <button type="submit">
-        Create Quest
-    </button>
+                <span>
+                    Home
+                </span>
 
-</form>
+            </a>
 
-<hr>
 
-<h3>Existing Quests</h3>
+            <a href="/library"
+               class="sidebar-link">
 
-<div th:if="${#lists.isEmpty(quests)}">
-    <p>No quests available.</p>
-</div>
+                <span class="sidebar-icon">
+                    ▣
+                </span>
 
-<div th:each="quest : ${quests}">
+                <span>
+                    Library
+                </span>
 
-    <h4 th:text="${quest.title}">
-        Quest Title
-    </h4>
+            </a>
 
-    <p th:text="${quest.description}">
-        Quest Description
-    </p>
 
-    <p>
-        Target:
-        <span th:text="${quest.targetProgress}">
-            0
-        </span>
-    </p>
+            <a href="/backlog"
+               class="sidebar-link">
 
-    <p>
-        Status:
-        <span th:text="${quest.active ? 'Active' : 'Inactive'}">
-            Active
-        </span>
-    </p>
+                <span class="sidebar-icon">
+                    ☰
+                </span>
 
-    <form
-            th:if="${quest.active}"
-            th:action="@{/admin/quests/{id}/delete(id=${quest.id})}"
-            method="post"
-    >
-        <button type="submit">
-            Deactivate Quest
-        </button>
-    </form>
+                <span>
+                    Backlog
+                </span>
 
-    <hr>
+            </a>
+
+
+            <a href="/quests"
+               class="sidebar-link">
+
+                <span class="sidebar-icon">
+                    ◇
+                </span>
+
+                <span>
+                    Quests
+                </span>
+
+            </a>
+
+
+            <a href="/friends"
+               class="sidebar-link">
+
+                <span class="sidebar-icon">
+                    ♧
+                </span>
+
+                <span>
+                    Friends
+                </span>
+
+            </a>
+
+
+            <a href="/reviews"
+               class="sidebar-link">
+
+                <span class="sidebar-icon">
+                    ☆
+                </span>
+
+                <span>
+                    Reviews
+                </span>
+
+            </a>
+
+
+            <a href="/profile"
+               class="sidebar-link">
+
+                <span class="sidebar-icon">
+                    ○
+                </span>
+
+                <span>
+                    Profile
+                </span>
+
+            </a>
+
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <a href="/logout"
+               class="sidebar-link logout-link">
+
+                <span class="sidebar-icon">
+                    ↪
+                </span>
+
+                <span>
+                    Logout
+                </span>
+
+            </a>
+
+        </div>
+
+
+    </aside>
+
+
+    <main class="main-content">
+
+
+        <section class="dashboard-page">
+
+
+            <div class="dashboard-container">
+
+
+                <section class="admin-page-header">
+
+                    <div>
+
+                        <span class="section-kicker">
+                            ADMIN
+                        </span>
+
+                        <h1>
+                            Quest Management
+                        </h1>
+
+                        <p>
+                            Create and manage quests for Questoria players.
+                        </p>
+
+                    </div>
+
+                </section>
+
+
+                <section class="admin-quest-create">
+
+
+                    <div class="admin-section-heading">
+
+                        <span class="section-kicker">
+                            CREATE
+                        </span>
+
+                        <h2>
+                            New Quest
+                        </h2>
+
+                    </div>
+
+
+                    <form
+                            class="admin-quest-form"
+                            th:action="@{/admin/quests}"
+                            method="post">
+
+
+                        <div class="admin-form-group">
+
+                            <label>
+                                Quest Title
+                            </label>
+
+                            <input
+                                    type="text"
+                                    name="title"
+                                    required
+                                    placeholder="e.g. Play 3 Games">
+
+                        </div>
+
+
+                        <div class="admin-form-group">
+
+                            <label>
+                                Description
+                            </label>
+
+                            <textarea
+                                    name="description"
+                                    required
+                                    placeholder="Describe what players need to complete..."></textarea>
+
+                        </div>
+
+
+                        <div class="admin-form-group">
+
+                            <label>
+                                Target Games
+                            </label>
+
+                            <input
+                                    type="number"
+                                    name="targetProgress"
+                                    min="1"
+                                    required
+                                    placeholder="e.g. 3">
+
+                        </div>
+
+
+                        <div class="admin-section-heading admin-achievement-heading">
+
+                            <span class="section-kicker">
+                                ACHIEVEMENT
+                            </span>
+
+                            <h2>
+                                Quest Reward
+                            </h2>
+
+                        </div>
+
+
+                        <div class="admin-form-group">
+
+                            <label>
+                                Achievement Name
+                            </label>
+
+                            <input
+                                    type="text"
+                                    name="achievementName"
+                                    required
+                                    placeholder="e.g. Game Collector">
+
+                        </div>
+
+
+                        <div class="admin-form-group">
+
+                            <label>
+                                Achievement Description
+                            </label>
+
+                            <textarea
+                                    name="achievementDescription"
+                                    required
+                                    placeholder="Describe the achievement players unlock..."></textarea>
+
+                        </div>
+
+
+                        <button
+                                type="submit"
+                                class="primary-button">
+
+                            Create Quest
+
+                        </button>
+
+
+                    </form>
+
+
+                </section>
+
+
+                <section class="admin-existing-quests">
+
+
+                    <div class="admin-section-heading">
+
+                        <span class="section-kicker">
+                            EXISTING QUESTS
+                        </span>
+
+                        <h2>
+                            Manage Quests
+                        </h2>
+
+                    </div>
+
+
+                    <div
+                            class="admin-quest-grid"
+                            th:if="${!#lists.isEmpty(quests)}">
+
+
+                        <article
+                                class="admin-quest-card"
+                                th:each="quest : ${quests}">
+
+
+                            <div class="admin-quest-top">
+
+
+                                <div>
+
+                                    <span class="quest-tag">
+                                        QUEST
+                                    </span>
+
+                                    <h3
+                                            th:text="${quest.title}">
+                                        Quest
+                                    </h3>
+
+                                </div>
+
+
+                                <span
+                                        class="admin-status-active"
+                                        th:if="${quest.active}">
+
+                                    ACTIVE
+
+                                </span>
+
+
+                                <span
+                                        class="admin-status-inactive"
+                                        th:unless="${quest.active}">
+
+                                    INACTIVE
+
+                                </span>
+
+
+                            </div>
+
+
+                            <p
+                                    th:text="${quest.description}">
+
+                                Description
+
+                            </p>
+
+
+                            <div class="admin-quest-target">
+
+                                Target:
+
+                                <strong
+                                        th:text="${quest.targetProgress}">
+                                    3
+                                </strong>
+
+                                Games
+
+                            </div>
+
+
+                            <div class="admin-quest-achievement">
+
+
+                                <div class="admin-achievement-icon">
+
+                                    🏆
+
+                                </div>
+
+
+                                <div>
+
+                                    <span>
+                                        ACHIEVEMENT
+                                    </span>
+
+                                    <strong
+                                            th:text="${quest.achievementName}">
+                                        Game Collector
+                                    </strong>
+
+                                    <p
+                                            th:text="${quest.achievementDescription}">
+                                        Complete the quest to unlock this achievement.
+                                    </p>
+
+                                </div>
+
+
+                            </div>
+
+
+                            <form
+                                    th:if="${quest.active}"
+                                    th:action="@{'/admin/quests/' + ${quest.id} + '/delete'}"
+                                    method="post">
+
+
+                                <button
+                                        type="submit"
+                                        class="danger-button">
+
+                                    Deactivate Quest
+
+                                </button>
+
+
+                            </form>
+
+
+                        </article>
+
+
+                    </div>
+
+
+                    <div
+                            class="inactive-message"
+                            th:if="${#lists.isEmpty(quests)}">
+
+                        No quests available.
+
+                    </div>
+
+
+                </section>
+
+
+            </div>
+
+
+        </section>
+
+
+        <footer class="footer">
+
+            <div class="footer-container">
+
+                <strong>
+                    QUESTORIA
+                </strong>
+
+                <span>
+                    Personal Steam Game Backlog & Quest Management System
+                </span>
+
+            </div>
+
+        </footer>
+
+
+    </main>
 
 </div>
 
 </body>
+
 </html>

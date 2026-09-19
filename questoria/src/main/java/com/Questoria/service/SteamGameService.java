@@ -32,6 +32,7 @@ public class SteamGameService {
     public void importGames(String steamId) {
 
         try {
+
             String json =
                     steamWebAPI.getOwnedGamesJson(steamId);
 
@@ -45,9 +46,11 @@ public class SteamGameService {
                     root.path("response").path("games");
 
             if (!games.isArray()) {
+
                 System.out.println(
                         "Tidak ada game yang dapat diambil dari Steam."
                 );
+
                 return;
             }
 
@@ -66,10 +69,12 @@ public class SteamGameService {
                             .orElse(null);
 
             if (player == null) {
+
                 System.out.println(
                         "Player tidak ditemukan untuk Steam ID: "
                                 + steamId
                 );
+
                 return;
             }
 
@@ -93,6 +98,11 @@ public class SteamGameService {
                     continue;
                 }
 
+                String steamCover =
+                        "https://shared.akamai.steamstatic.com/steam/apps/"
+                                + steamAppId
+                                + "/header.jpg";
+
                 Game game =
                         gameService.getGameBySteamAppId(
                                 steamAppId
@@ -106,33 +116,33 @@ public class SteamGameService {
                             steamAppId
                     );
 
-                    game.setTitle(title);
-
-                    game.setCover(
-                            "https://cdn.akamai.steamstatic.com/steam/apps/"
-                                    + steamAppId
-                                    + "/header.jpg"
+                    game.setTitle(
+                            title
                     );
 
-                    gameService.saveGame(game);
+                    game.setCover(
+                            steamCover
+                    );
+
+                    gameService.saveGame(
+                            game
+                    );
 
                     importedGames++;
 
                 } else {
 
-                    game.setTitle(title);
+                    game.setTitle(
+                            title
+                    );
 
-                    if (game.getCover() == null
-                            || game.getCover().isBlank()) {
+                    game.setCover(
+                            steamCover
+                    );
 
-                        game.setCover(
-                                "https://cdn.akamai.steamstatic.com/steam/apps/"
-                                        + steamAppId
-                                        + "/header.jpg"
-                        );
-                    }
-
-                    gameService.saveGame(game);
+                    gameService.saveGame(
+                            game
+                    );
 
                     existingGames++;
                 }
@@ -150,11 +160,25 @@ public class SteamGameService {
                     backlogItem =
                             new BacklogItem();
 
-                    backlogItem.setPlayer(player);
-                    backlogItem.setGame(game);
-                    backlogItem.setStatus("BACKLOG");
-                    backlogItem.setProgress(0);
-                    backlogItem.setNotes("");
+                    backlogItem.setPlayer(
+                            player
+                    );
+
+                    backlogItem.setGame(
+                            game
+                    );
+
+                    backlogItem.setStatus(
+                            "BACKLOG"
+                    );
+
+                    backlogItem.setProgress(
+                            0
+                    );
+
+                    backlogItem.setNotes(
+                            ""
+                    );
 
                     backlogRepository.save(
                             backlogItem
@@ -169,15 +193,18 @@ public class SteamGameService {
             );
 
             System.out.println(
-                    "Game baru: " + importedGames
+                    "Game baru: "
+                            + importedGames
             );
 
             System.out.println(
-                    "Game sudah ada: " + existingGames
+                    "Game sudah ada: "
+                            + existingGames
             );
 
             System.out.println(
-                    "Backlog baru: " + newBacklogItems
+                    "Backlog baru: "
+                            + newBacklogItems
             );
 
         } catch (Exception e) {

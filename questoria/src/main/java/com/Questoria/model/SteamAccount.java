@@ -12,12 +12,12 @@ public class SteamAccount {
     private String steamId;
     private String username;
     private String profileUrl;
+    private String avatarUrl;
 
     @OneToOne(mappedBy = "steamAccount")
     private Player player;
 
-    public SteamAccount() {
-    }
+    public SteamAccount() {}
 
     public Long getId() {
         return id;
@@ -45,6 +45,14 @@ public class SteamAccount {
 
     public void setProfileUrl(String profileUrl) {
         this.profileUrl = profileUrl;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
     public Player getPlayer() {

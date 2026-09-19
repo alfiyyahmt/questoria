@@ -68,4 +68,14 @@ public class Player {
     public void setQuestPlayers(List<QuestPlayer> questPlayers) {
         this.questPlayers = questPlayers;
     }
+
+    @OneToMany(mappedBy = "player")
+    private List<Review> reviews;
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
 }

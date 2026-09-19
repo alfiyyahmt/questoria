@@ -1,7 +1,6 @@
 package com.Questoria.model;
 
 import jakarta.persistence.*;
-
 import java.util.List;
 
 @Entity
@@ -12,8 +11,17 @@ public class Quest {
     private Long id;
 
     private String title;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
+
     private int targetProgress;
+
+    private String achievementName;
+
+    @Column(columnDefinition = "TEXT")
+    private String achievementDescription;
+
     private boolean active;
 
     @OneToMany(mappedBy = "quest")
@@ -48,6 +56,22 @@ public class Quest {
 
     public void setTargetProgress(int targetProgress) {
         this.targetProgress = targetProgress;
+    }
+
+    public String getAchievementName() {
+        return achievementName;
+    }
+
+    public void setAchievementName(String achievementName) {
+        this.achievementName = achievementName;
+    }
+
+    public String getAchievementDescription() {
+        return achievementDescription;
+    }
+
+    public void setAchievementDescription(String achievementDescription) {
+        this.achievementDescription = achievementDescription;
     }
 
     public boolean isActive() {

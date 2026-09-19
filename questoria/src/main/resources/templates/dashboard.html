@@ -1,71 +1,845 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
 <head>
+
   <meta charset="UTF-8">
-  <title>Questoria - Dashboard</title>
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Questoria</title>
+
+  <link rel="stylesheet"
+        th:href="@{/css/style.css}">
+
+  <style>
+
+    .search-game-card a {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .search-game-card {
+      overflow: hidden;
+    }
+
+    .featured-game-image {
+      display: block;
+      width: 100%;
+      aspect-ratio: 460 / 215;
+      object-fit: contain;
+      object-position: center;
+      background: #edf0f3;
+    }
+
+  </style>
+
 </head>
+
 <body>
 
-<h1>Questoria</h1>
+<div class="app-layout">
 
-<nav>
-  <a href="/">Dashboard</a>
-  <a href="/library">My Library</a>
-  <a href="/backlog">Backlog</a>
-  <a href="/quests">Quests</a>
-  <a href="/profile">Profile</a>
-  <a href="/logout">Logout</a>
-</nav>
+  <aside class="sidebar">
 
-<hr>
+    <div class="sidebar-brand">
 
-<h2>Welcome, <span th:text="${player.displayName}">Player</span></h2>
+      <a href="/" class="brand">
+        QUESTORIA
+      </a>
 
-<div>
-  <h3>Total Games</h3>
-  <p th:text="${totalGames}">0</p>
+      <span class="sidebar-tagline">
+        GAME TRACKER
+      </span>
+
+    </div>
+
+
+    <nav class="sidebar-menu">
+
+
+      <a href="/"
+         class="sidebar-link active">
+
+        <span class="sidebar-icon">
+          ⌂
+        </span>
+
+        <span>
+          Home
+        </span>
+
+      </a>
+
+
+      <th:block th:if="${isLoggedIn}">
+
+
+        <a href="/library"
+           class="sidebar-link">
+
+          <span class="sidebar-icon">
+            ▣
+          </span>
+
+          <span>
+            Library
+          </span>
+
+        </a>
+
+
+        <a href="/backlog"
+           class="sidebar-link">
+
+          <span class="sidebar-icon">
+            ☰
+          </span>
+
+          <span>
+            Backlog
+          </span>
+
+        </a>
+
+
+        <a href="/quests"
+           class="sidebar-link">
+
+          <span class="sidebar-icon">
+            ◇
+          </span>
+
+          <span>
+            Quests
+          </span>
+
+        </a>
+
+
+        <a href="/friends"
+           class="sidebar-link">
+
+          <span class="sidebar-icon">
+            ♧
+          </span>
+
+          <span>
+            Friends
+          </span>
+
+        </a>
+
+
+        <a href="/reviews"
+           class="sidebar-link">
+
+          <span class="sidebar-icon">
+            ☆
+          </span>
+
+          <span>
+            Reviews
+          </span>
+
+        </a>
+
+
+        <a href="/profile"
+           class="sidebar-link">
+
+          <span class="sidebar-icon">
+            ○
+          </span>
+
+          <span>
+            Profile
+          </span>
+
+        </a>
+
+
+      </th:block>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+
+      <th:block th:if="${isLoggedIn}">
+
+        <a href="/logout"
+           class="sidebar-logout">
+
+          <span class="sidebar-icon">
+            ↪
+          </span>
+
+          <span>
+            Logout
+          </span>
+
+        </a>
+
+      </th:block>
+
+
+      <th:block th:unless="${isLoggedIn}">
+
+        <a href="/auth/steam"
+           class="sidebar-steam-login">
+
+          Login with Steam
+
+        </a>
+
+      </th:block>
+
+
+    </div>
+
+  </aside>
+
+
+  <main class="main-content">
+
+
+    <div class="dashboard-topbar">
+
+      <div class="nav-search">
+
+
+        <form action="/"
+              method="get">
+
+
+          <input
+                  id="navSearch"
+                  class="nav-search-input"
+                  type="text"
+                  name="search"
+                  th:value="${searchQuery}"
+                  placeholder="Search a game..."
+                  autocomplete="off">
+
+
+        </form>
+
+
+        <div
+                id="navSearchSuggestions"
+                class="nav-search-suggestions">
+        </div>
+
+
+      </div>
+
+    </div>
+
+
+    <th:block th:if="${isLoggedIn}">
+
+
+      <section class="dashboard-page">
+
+
+        <div class="dashboard-container">
+
+
+          <section class="dashboard-welcome">
+
+
+            <div>
+
+
+              <span class="section-kicker">
+                WELCOME BACK
+              </span>
+
+
+              <h1>
+
+                <span th:text="${player.displayName}">
+                  Player
+                </span>
+
+              </h1>
+
+
+              <p>
+                Continue your gaming journey with Questoria.
+              </p>
+
+
+            </div>
+
+
+          </section>
+
+
+          <section class="dashboard-stats">
+
+
+            <div class="stat-card">
+
+
+              <span class="stat-label">
+                LIBRARY
+              </span>
+
+
+              <strong th:text="${libraryCount}">
+                0
+              </strong>
+
+
+              <span>
+                Games
+              </span>
+
+
+            </div>
+
+
+            <div class="stat-card">
+
+
+              <span class="stat-label">
+                BACKLOG
+              </span>
+
+
+              <strong th:text="${backlogCount}">
+                0
+              </strong>
+
+
+              <span>
+                Games
+              </span>
+
+
+            </div>
+
+
+            <div class="stat-card">
+
+
+              <span class="stat-label">
+                QUESTS
+              </span>
+
+
+              <strong th:text="${questCount}">
+                0
+              </strong>
+
+
+              <span>
+                Active
+              </span>
+
+
+            </div>
+
+
+          </section>
+
+
+          <section class="dashboard-section">
+
+
+            <div class="section-heading">
+
+
+              <div>
+
+
+                <span class="section-kicker">
+                  YOUR GAMES
+                </span>
+
+
+                <h2>
+                  My Library
+                </h2>
+
+
+              </div>
+
+
+              <a href="/library">
+                View Library →
+              </a>
+
+
+            </div>
+
+
+          </section>
+
+
+          <section class="dashboard-section">
+
+
+            <div class="section-heading">
+
+
+              <div>
+
+
+                <span class="section-kicker">
+                  YOUR JOURNEY
+                </span>
+
+
+                <h2>
+                  Active Quests
+                </h2>
+
+
+              </div>
+
+
+              <a href="/quests">
+                View Quests →
+              </a>
+
+
+            </div>
+
+
+          </section>
+
+
+        </div>
+
+
+      </section>
+
+
+    </th:block>
+
+
+    <th:block th:unless="${isLoggedIn}">
+
+
+      <section class="guest-hero">
+
+
+        <div class="guest-hero-content">
+
+
+          <span class="section-kicker">
+            YOUR PERSONAL GAME TRACKER
+          </span>
+
+
+          <h1>
+            Your games.<br>
+            Your quests.<br>
+            Your progress.
+          </h1>
+
+
+          <p>
+            Connect your Steam account and manage
+            your game backlog in one place.
+          </p>
+
+
+          <a href="/auth/steam"
+             class="primary-button">
+
+            Login with Steam
+
+          </a>
+
+
+        </div>
+
+
+      </section>
+
+
+      <section class="guest-discover">
+
+
+        <div class="dashboard-container">
+
+
+          <div class="section-heading">
+
+
+            <div>
+
+
+              <span class="section-kicker">
+                DISCOVER
+              </span>
+
+
+              <h2>
+                Popular on Steam
+              </h2>
+
+
+            </div>
+
+
+          </div>
+
+
+          <div class="search-game-grid">
+
+
+            <article
+                    class="search-game-card"
+                    th:each="game : ${featuredGames}">
+
+
+              <a th:href="@{/steam/game(appId=${game['id']})}">
+
+
+                <img
+                        class="featured-game-image"
+                        th:src="${game['image']}"
+                        th:alt="${game['name']}"
+                        th:attr="data-fallback=${game['fallbackImage']}"
+                        onerror="if (this.dataset.fallback && this.src !== this.dataset.fallback) { this.src = this.dataset.fallback; }">
+
+
+                <div class="search-game-info">
+
+
+                  <h3 th:text="${game['name']}">
+                    Game
+                  </h3>
+
+
+                </div>
+
+
+              </a>
+
+
+            </article>
+
+
+          </div>
+
+
+        </div>
+
+
+      </section>
+
+
+    </th:block>
+
+
+    <footer class="footer">
+
+
+      <div class="footer-container">
+
+
+        <strong>
+          QUESTORIA
+        </strong>
+
+
+        <span>
+          Personal Steam Game Backlog & Quest Management System
+        </span>
+
+
+      </div>
+
+
+    </footer>
+
+
+  </main>
+
+
 </div>
 
-<div>
-  <h3>Backlog</h3>
-  <p th:text="${backlogCount}">0</p>
-</div>
 
-<div>
-  <h3>Playing</h3>
-  <p th:text="${playingCount}">0</p>
-</div>
+<script>
 
-<div>
-  <h3>Completed</h3>
-  <p th:text="${completedCount}">0</p>
-</div>
 
-<h2>Recent Games</h2>
+  const navSearch =
+          document.getElementById("navSearch");
 
-<div th:if="${#lists.isEmpty(recentGames)}">
-  <p>No games yet.</p>
-</div>
 
-<div th:each="item : ${recentGames}">
-  <h3 th:text="${item.game.title}">Game Title</h3>
+  const navSuggestions =
+          document.getElementById("navSearchSuggestions");
 
-  <img
-          th:src="${item.game.cover}"
-          th:alt="${item.game.title}"
-          width="200"
-  >
 
-  <p>
-    Status:
-    <span th:text="${item.status}">BACKLOG</span>
-  </p>
+  let searchTimer;
 
-  <p>
-    Progress:
-    <span th:text="${item.progress}">0</span>%
-  </p>
-</div>
+
+  if (navSearch && navSuggestions) {
+
+
+    navSearch.addEventListener(
+            "input",
+            function () {
+
+
+              clearTimeout(searchTimer);
+
+
+              const query =
+                      navSearch.value.trim();
+
+
+              if (query.length < 3) {
+
+
+                navSuggestions.innerHTML = "";
+
+
+                navSuggestions.style.display =
+                        "none";
+
+
+                return;
+
+
+              }
+
+
+              searchTimer =
+                      setTimeout(
+                              async function () {
+
+
+                                try {
+
+
+                                  const response =
+                                          await fetch(
+                                                  "/steam/search?query="
+                                                  + encodeURIComponent(query)
+                                          );
+
+
+                                  if (!response.ok) {
+
+
+                                    navSuggestions.innerHTML = "";
+
+
+                                    navSuggestions.style.display =
+                                            "none";
+
+
+                                    return;
+
+
+                                  }
+
+
+                                  const games =
+                                          await response.json();
+
+
+                                  navSuggestions.innerHTML =
+                                          "";
+
+
+                                  if (
+                                          !games ||
+                                          games.length === 0
+                                  ) {
+
+
+                                    navSuggestions.style.display =
+                                            "none";
+
+
+                                    return;
+
+
+                                  }
+
+
+                                  games
+                                          .slice(0, 5)
+                                          .forEach(function (game) {
+
+
+                                            const link =
+                                                    document.createElement("a");
+
+
+                                            link.className =
+                                                    "nav-search-suggestion";
+
+
+                                            link.href =
+                                                    "/steam/game?appId="
+                                                    + encodeURIComponent(game.id);
+
+
+                                            const image =
+                                                    document.createElement("img");
+
+
+                                            image.src =
+                                                    game.tinyImage || "";
+
+
+                                            image.alt =
+                                                    game.name || "Game";
+
+
+                                            const info =
+                                                    document.createElement("div");
+
+
+                                            info.className =
+                                                    "nav-search-suggestion-info";
+
+
+                                            const name =
+                                                    document.createElement("strong");
+
+
+                                            name.className =
+                                                    "nav-search-suggestion-name";
+
+
+                                            name.textContent =
+                                                    game.name || "Unknown game";
+
+
+                                            const label =
+                                                    document.createElement("span");
+
+
+                                            label.className =
+                                                    "nav-search-suggestion-label";
+
+
+                                            label.textContent =
+                                                    "View game";
+
+
+                                            info.appendChild(name);
+
+
+                                            info.appendChild(label);
+
+
+                                            link.appendChild(image);
+
+
+                                            link.appendChild(info);
+
+
+                                            navSuggestions.appendChild(link);
+
+
+                                          });
+
+
+                                  navSuggestions.style.display =
+                                          "block";
+
+
+                                } catch (error) {
+
+
+                                  navSuggestions.innerHTML = "";
+
+
+                                  navSuggestions.style.display =
+                                          "none";
+
+
+                                }
+
+
+                              },
+                              300
+                      );
+
+
+            }
+    );
+
+
+    document.addEventListener(
+            "click",
+            function (event) {
+
+
+              if (
+                      !navSearch.contains(event.target) &&
+                      !navSuggestions.contains(event.target)
+              ) {
+
+
+                navSuggestions.innerHTML = "";
+
+
+                navSuggestions.style.display =
+                        "none";
+
+
+              }
+
+
+            }
+    );
+
+
+    navSearch.addEventListener(
+            "keydown",
+            function (event) {
+
+
+              if (event.key === "Escape") {
+
+
+                navSuggestions.innerHTML = "";
+
+
+                navSuggestions.style.display =
+                        "none";
+
+
+              }
+
+
+              if (
+                      event.key === "Enter" &&
+                      navSearch.value.trim().length === 0
+              ) {
+
+
+                event.preventDefault();
+
+
+              }
+
+
+            }
+    );
+
+
+  }
+
+</script>
+
 
 </body>
+
 </html>
