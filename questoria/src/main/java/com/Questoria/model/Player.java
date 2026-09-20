@@ -17,11 +17,22 @@ public class Player {
     @OneToOne
     private SteamAccount steamAccount;
 
+    @ManyToMany
+    @JoinTable(
+            name = "player_library",
+            joinColumns = @JoinColumn(name = "player_id"),
+            inverseJoinColumns = @JoinColumn(name = "game_id")
+    )
+    private List<Game> libraryGames;
+
     @OneToMany(mappedBy = "player")
     private List<BacklogItem> backlogItems;
 
     @OneToMany(mappedBy = "player")
     private List<QuestPlayer> questPlayers;
+
+    @OneToMany(mappedBy = "player")
+    private List<Review> reviews;
 
     public Player() {}
 
@@ -53,6 +64,14 @@ public class Player {
         this.steamAccount = steamAccount;
     }
 
+    public List<Game> getLibraryGames() {
+        return libraryGames;
+    }
+
+    public void setLibraryGames(List<Game> libraryGames) {
+        this.libraryGames = libraryGames;
+    }
+
     public List<BacklogItem> getBacklogItems() {
         return backlogItems;
     }
@@ -69,8 +88,6 @@ public class Player {
         this.questPlayers = questPlayers;
     }
 
-    @OneToMany(mappedBy = "player")
-    private List<Review> reviews;
     public List<Review> getReviews() {
         return reviews;
     }

@@ -14,7 +14,7 @@ public class Review {
     @ManyToOne
     private Player player;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Game game;
 
     private int rating;

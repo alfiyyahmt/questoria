@@ -98,44 +98,23 @@ public class DashboardController {
         List<BacklogItem> backlogItems =
                 backlogService.getBacklogByPlayer(player);
 
-        long totalGames =
-                backlogItems.size();
+        if (backlogItems == null) {
+            backlogItems = new ArrayList<>();
+        }
 
-        long playingCount =
-                backlogItems.stream()
-                        .filter(item ->
-                                "PLAYING".equalsIgnoreCase(
-                                        item.getStatus()
-                                )
-                        )
-                        .count();
-
-        long completedCount =
-                backlogItems.stream()
-                        .filter(item ->
-                                "COMPLETED".equalsIgnoreCase(
-                                        item.getStatus()
-                                )
-                        )
-                        .count();
+        long libraryCount =
+                player.getLibraryGames() != null
+                        ? player.getLibraryGames().size()
+                        : 0;
 
         long backlogCount =
-                backlogItems.stream()
-                        .filter(item ->
-                                !"PLAYING".equalsIgnoreCase(
-                                        item.getStatus()
-                                )
-                                        && !"COMPLETED".equalsIgnoreCase(
-                                        item.getStatus()
-                                )
-                                        && !"ON_HOLD".equalsIgnoreCase(
-                                        item.getStatus()
-                                )
-                                        && !"DROPPED".equalsIgnoreCase(
-                                        item.getStatus()
-                                )
-                        )
-                        .count();
+                backlogItems.size();
+
+        List<DashboardQuest> dashboardQuests =
+                getDashboardQuests(player);
+
+        long questCount =
+                dashboardQuests.size();
 
         model.addAttribute(
                 "player",
@@ -143,8 +122,8 @@ public class DashboardController {
         );
 
         model.addAttribute(
-                "totalGames",
-                totalGames
+                "libraryCount",
+                libraryCount
         );
 
         model.addAttribute(
@@ -153,13 +132,8 @@ public class DashboardController {
         );
 
         model.addAttribute(
-                "playingCount",
-                playingCount
-        );
-
-        model.addAttribute(
-                "completedCount",
-                completedCount
+                "questCount",
+                questCount
         );
 
         model.addAttribute(
@@ -171,7 +145,7 @@ public class DashboardController {
 
         model.addAttribute(
                 "activeQuests",
-                getDashboardQuests(player)
+                dashboardQuests
         );
 
         model.addAttribute(
@@ -186,7 +160,6 @@ public class DashboardController {
 
         return "dashboard";
     }
-
 
     private List<DashboardQuest> getDashboardQuests(
             Player player) {
@@ -252,7 +225,6 @@ public class DashboardController {
 
         return dashboardQuests;
     }
-
 
     private void addSearchResults(
             String search,

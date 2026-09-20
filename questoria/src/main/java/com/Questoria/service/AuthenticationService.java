@@ -19,8 +19,8 @@ public class AuthenticationService {
         return "https://steamcommunity.com/openid/login"
                 + "?openid.ns=http://specs.openid.net/auth/2.0"
                 + "&openid.mode=checkid_setup"
-                + "&openid.return_to=http://localhost:8080/auth/steam/callback"
-                + "&openid.realm=http://localhost:8080/"
+                + "&openid.return_to=https://outlet-caution-unbolted.ngrok-free.dev/auth/steam/callback"
+                + "&openid.realm=https://outlet-caution-unbolted.ngrok-free.dev/"
                 + "&openid.identity=http://specs.openid.net/auth/2.0/identifier_select"
                 + "&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select";
     }

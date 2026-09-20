@@ -213,14 +213,6 @@
                     </a>
 
 
-                    <a href="/backlog?status=BACKLOG"
-                       th:classappend="${selectedStatus == 'BACKLOG'} ? ' active' : ''">
-
-                        Backlog
-
-                    </a>
-
-
                     <a href="/backlog?status=PLAYING"
                        th:classappend="${selectedStatus == 'PLAYING'} ? ' active' : ''">
 
@@ -233,6 +225,14 @@
                        th:classappend="${selectedStatus == 'COMPLETED'} ? ' active' : ''">
 
                         Completed
+
+                    </a>
+
+
+                    <a href="/backlog?status=DROPPED"
+                       th:classappend="${selectedStatus == 'DROPPED'} ? ' active' : ''">
+
+                        Dropped
 
                     </a>
 
@@ -309,7 +309,7 @@
                                 <span class="status-badge"
                                       th:text="${item.status}">
 
-                                    BACKLOG
+                                    PLAYING
 
                                 </span>
 
@@ -329,14 +329,6 @@
 
                                     <select name="status">
 
-                                        <option value="BACKLOG"
-                                                th:selected="${item.status == 'BACKLOG'}">
-
-                                            Backlog
-
-                                        </option>
-
-
                                         <option value="PLAYING"
                                                 th:selected="${item.status == 'PLAYING'}">
 
@@ -349,6 +341,14 @@
                                                 th:selected="${item.status == 'COMPLETED'}">
 
                                             Completed
+
+                                        </option>
+
+
+                                        <option value="DROPPED"
+                                                th:selected="${item.status == 'DROPPED'}">
+
+                                            Dropped
 
                                         </option>
 
@@ -410,14 +410,14 @@
 
         <footer class="footer">
 
-            <div class="footer-inner">
+            <div class="footer-container">
+
+                <strong>
+                    QUESTORIA
+                </strong>
 
                 <span>
-                    © 2026 Questoria
-                </span>
-
-                <span>
-                    Personal Steam Game Tracker
+                    Personal Steam Game Backlog & Quest Management System
                 </span>
 
             </div>

@@ -1,7 +1,6 @@
 package com.Questoria.model;
 
 import jakarta.persistence.*;
-
 import java.util.List;
 
 @Entity
@@ -20,8 +19,13 @@ public class Game {
     @OneToMany(mappedBy = "game")
     private List<BacklogItem> backlogItems;
 
-    public Game() {
-    }
+    @OneToMany(mappedBy = "game")
+    private List<Review> reviews;
+
+    @ManyToMany(mappedBy = "libraryGames")
+    private List<Player> players;
+
+    public Game() {}
 
     public Long getId() {
         return id;
@@ -75,13 +79,19 @@ public class Game {
         this.backlogItems = backlogItems;
     }
 
-    @OneToMany(mappedBy = "game")
-    private List<Review> reviews;
     public List<Review> getReviews() {
         return reviews;
     }
 
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
+    }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
     }
 }

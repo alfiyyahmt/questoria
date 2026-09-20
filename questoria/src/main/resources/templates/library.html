@@ -207,7 +207,7 @@
 
                 <div
                         class="empty-state"
-                        th:if="${#lists.isEmpty(backlogItems)}">
+                        th:if="${#lists.isEmpty(libraryGames)}">
 
                     <div class="empty-icon">
                         🎮
@@ -242,20 +242,20 @@
 
                 <section
                         class="library-game-grid"
-                        th:if="${!#lists.isEmpty(backlogItems)}">
+                        th:if="${!#lists.isEmpty(libraryGames)}">
 
 
                     <article
                             class="library-game-card"
-                            th:each="item : ${backlogItems}">
+                            th:each="game : ${libraryGames}">
 
 
                         <div class="library-game-cover">
 
                             <img
-                                    th:src="${item.game.cover}"
-                                    th:alt="${item.game.title}"
-                                    th:attr="data-fallback=${item.game.steamAppId != null ? 'https://cdn.akamai.steamstatic.com/steam/apps/' + item.game.steamAppId + '/header.jpg' : ''}"
+                                    th:src="${game.cover}"
+                                    th:alt="${game.title}"
+                                    th:attr="data-fallback=${game.steamAppId != null ? 'https://cdn.akamai.steamstatic.com/steam/apps/' + game.steamAppId + '/header.jpg' : ''}"
                                     onerror="if (this.dataset.fallback && this.src !== this.dataset.fallback) { this.src = this.dataset.fallback; }">
 
                         </div>
@@ -264,14 +264,14 @@
                         <div class="library-game-info">
 
                             <h3
-                                    th:text="${item.game.title}">
+                                    th:text="${game.title}">
                                 Game Title
                             </h3>
 
 
                             <p
                                     class="library-game-developer"
-                                    th:text="${item.game.developer != null && !item.game.developer.isBlank() ? item.game.developer : 'Steam Game'}">
+                                    th:text="${game.developer != null && !game.developer.isBlank() ? game.developer : 'Steam Game'}">
                                 Steam Game
                             </p>
 
@@ -279,19 +279,12 @@
                             <div class="library-game-meta">
 
                                 <span
-                                        class="status-badge"
-                                        th:text="${item.status}">
-                                    BACKLOG
-                                </span>
-
-
-                                <span
                                         class="library-review-rating"
-                                        th:if="${userReviews[item.game.id] != null}">
+                                        th:if="${userReviews[game.id] != null}">
 
                                     <span
                                             th:each="star : ${#numbers.sequence(1, 5)}"
-                                            th:text="${star <= userReviews[item.game.id].rating ? '★' : '☆'}">
+                                            th:text="${star <= userReviews[game.id].rating ? '★' : '☆'}">
                                         ★
                                     </span>
 
@@ -300,9 +293,43 @@
 
                                 <span
                                         class="library-review-unrated"
-                                        th:if="${userReviews[item.game.id] == null}">
+                                        th:if="${userReviews[game.id] == null}">
 
                                     ☆ Not reviewed
+
+                                </span>
+
+                            </div>
+
+
+                            <div class="library-game-actions">
+
+                                <form
+                                        th:if="${!backlogGameIds.contains(game.id)}"
+                                        th:action="@{/library/add-to-backlog}"
+                                        method="post">
+
+                                    <input
+                                            type="hidden"
+                                            name="gameId"
+                                            th:value="${game.id}">
+
+                                    <button
+                                            type="submit"
+                                            class="primary-button">
+
+                                        Add to Backlog
+
+                                    </button>
+
+                                </form>
+
+
+                                <span
+                                        th:if="${backlogGameIds.contains(game.id)}"
+                                        class="status-badge">
+
+                                    In Backlog
 
                                 </span>
 

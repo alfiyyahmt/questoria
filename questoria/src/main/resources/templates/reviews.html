@@ -219,8 +219,6 @@
                 </div>
 
 
-                <!-- WRITE REVIEW -->
-
                 <section class="review-form-card"
                          th:if="${selectedGame != null}">
 
@@ -345,8 +343,6 @@
                 </section>
 
 
-                <!-- EMPTY -->
-
                 <div class="empty-state"
                      th:if="${(reviews == null or #lists.isEmpty(reviews)) and selectedGame == null}">
 
@@ -369,8 +365,6 @@
                 </div>
 
 
-                <!-- REVIEWS LIST -->
-
                 <section
                         class="reviews-list"
                         th:if="${reviews != null and !#lists.isEmpty(reviews)}">
@@ -387,7 +381,7 @@
                                     th:if="${review.game != null}"
                                     th:src="${review.game.cover}"
                                     th:alt="${review.game.title}"
-                                    th:attr="data-fallback=${review.game.steamAppId != null ? 'https://shared.akamai.steamstatic.com/steam/apps/' + review.game.steamAppId + '/header.jpg' : ''}"
+                                    th:attr="data-fallback=${review.game.steamAppId != null ? 'https://cdn.akamai.steamstatic.com/steam/apps/' + review.game.steamAppId + '/header.jpg' : ''}"
                                     onerror="if (this.dataset.fallback && this.src !== this.dataset.fallback) { this.src = this.dataset.fallback; }">
 
                         </div>

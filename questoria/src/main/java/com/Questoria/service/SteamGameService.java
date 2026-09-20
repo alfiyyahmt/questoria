@@ -1,31 +1,28 @@
 package com.Questoria.service;
 
 import com.Questoria.integration.SteamWebAPI;
-import com.Questoria.model.BacklogItem;
 import com.Questoria.model.Game;
 import com.Questoria.model.Player;
-import com.Questoria.repository.BacklogRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 
 @Service
 public class SteamGameService {
 
     private final SteamWebAPI steamWebAPI;
     private final GameService gameService;
-    private final BacklogRepository backlogRepository;
     private final PlayerService playerService;
 
     public SteamGameService(
             SteamWebAPI steamWebAPI,
             GameService gameService,
-            BacklogRepository backlogRepository,
             PlayerService playerService) {
 
         this.steamWebAPI = steamWebAPI;
         this.gameService = gameService;
-        this.backlogRepository = backlogRepository;
         this.playerService = playerService;
     }
 
@@ -78,9 +75,16 @@ public class SteamGameService {
                 return;
             }
 
+            if (player.getLibraryGames() == null) {
+
+                player.setLibraryGames(
+                        new ArrayList<>()
+                );
+            }
+
             int importedGames = 0;
             int existingGames = 0;
-            int newBacklogItems = 0;
+            int newLibraryGames = 0;
 
             for (JsonNode gameNode : games) {
 
@@ -94,12 +98,14 @@ public class SteamGameService {
                 String title =
                         gameNode.path("name").asText();
 
-                if (steamAppId == 0 || title.isBlank()) {
+                if (steamAppId == 0
+                        || title == null
+                        || title.isBlank()) {
                     continue;
                 }
 
                 String steamCover =
-                        "https://shared.akamai.steamstatic.com/steam/apps/"
+                        "https://cdn.akamai.steamstatic.com/steam/apps/"
                                 + steamAppId
                                 + "/header.jpg";
 
@@ -147,46 +153,15 @@ public class SteamGameService {
                     existingGames++;
                 }
 
-                BacklogItem backlogItem =
-                        backlogRepository
-                                .findByPlayerAndGame(
-                                        player,
-                                        game
-                                )
-                                .orElse(null);
+                if (!player.getLibraryGames().contains(game)) {
 
-                if (backlogItem == null) {
+                    player.getLibraryGames().add(game);
 
-                    backlogItem =
-                            new BacklogItem();
-
-                    backlogItem.setPlayer(
-                            player
-                    );
-
-                    backlogItem.setGame(
-                            game
-                    );
-
-                    backlogItem.setStatus(
-                            "BACKLOG"
-                    );
-
-                    backlogItem.setProgress(
-                            0
-                    );
-
-                    backlogItem.setNotes(
-                            ""
-                    );
-
-                    backlogRepository.save(
-                            backlogItem
-                    );
-
-                    newBacklogItems++;
+                    newLibraryGames++;
                 }
             }
+
+            playerService.savePlayer(player);
 
             System.out.println(
                     "Import Steam selesai."
@@ -203,8 +178,8 @@ public class SteamGameService {
             );
 
             System.out.println(
-                    "Backlog baru: "
-                            + newBacklogItems
+                    "Game baru masuk Library: "
+                            + newLibraryGames
             );
 
         } catch (Exception e) {
